@@ -1,10 +1,10 @@
-width = 23.5;
-height = 5;
-depth = 5;
-wall_thickness = .1;
-cutout_edge_y = 1.3;
-cutout_edge_x = 2;
-wall_width = .75;
+width = 235;
+height = 50;
+depth = 50;
+wall_thickness = 1;
+cutout_edge_y = 13;
+cutout_edge_x = 20;
+wall_width = 7.5;
 num_slats = 6;
 
 module box_bottom(width, depth, height, wall_thickness) {
@@ -121,12 +121,43 @@ module side_left_slice() {
         cube([wall_width, depth-2*wall_width, wall_thickness*2]);
 }
 
+module bottom_middle_slice() {
+    difference() {
+        middle_slice();
+        translate([0, -wall_thickness, wall_thickness])
+            cube([width+.02, depth+wall_thickness+.02, height]);
+    };
+};
+
+module back_left_slice() {
+    difference() {
+        difference() {
+            slice(left = true);
+            translate([-0.01, -wall_width-wall_thickness, -0.01])
+                cube([width+.02, depth+wall_thickness-0.01, height+.02]);;
+        }
+        translate([0, depth - wall_width - wall_thickness, -.01])
+            cube([width, wall_width, wall_thickness+.02]);
+        translate([-.01, depth - wall_width - wall_thickness, 0])
+            cube([wall_thickness+.02, wall_width+.01, height+.01]);
+    }
+    translate([wall_thickness, depth-wall_width-wall_thickness, wall_thickness])
+        cube([width/3/2, wall_width, 2*wall_thickness]);
+}
+
+
+
+module back_right_side_slice() {
+    translate([width, depth, 0])
+    rotate([0,0,180])
+    front_left_slice();
+};
 
 //translate([0, -.5, 0])
 //rotate([90,0,0])
 //front_middle_slice();
 
-translate([0, -.5, 0])
+translate([0, -5, 0])
 rotate([90,0,0])
 front_left_slice();
 
@@ -134,19 +165,12 @@ translate([width/3, 0, 0])
 rotate([0,-90,0])
 side_left_slice();
 
-//ride side slice
-//translate([width, depth, 0])
-//rotate([0,0,180])
-//front_left_slice();
+//back_left_slice();
+
+//back_right_side_slice();
 
 
-module bottom_middle_slice() {
-    difference() {
-        middle_slice();
-        translate([0, -wall_thickness, wall_thickness])
-            cube([width+.02, depth+wall_thickness+.02, height]);
-    };
-}
+
 //bottom_middle_slice();
 
 
