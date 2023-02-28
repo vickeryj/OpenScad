@@ -2,7 +2,7 @@
 $fn=70;
 
 tabThickness = 1.85;
-tabWidth = 3.55;
+tabWidth = 4.01;
 //Gap between tabs on the inside snap
 tabSeperation = 1.3;
 //Moves the tabs on the outside part, to allow more room for inside part
@@ -24,9 +24,6 @@ backLength = 5;
 
 //how much of the ball comes from the tab on the range (0 , 0.5]
 ballRatio = .4; 
-
-
-
 
 
 //reverse testing equation for diameter from width
@@ -86,8 +83,8 @@ module negativeOutsidePart() {
         translate([0,0,tabSeperation])
             insideTab();
     }
-    translate([-tabWidth/2,tabWidth/2,0])
-        cube([tabWidth,pivotTolerance,2*tabThickness+tabSeperation]);
+    translate([-tabWidth/2,tabWidth/2,-tabTolerance])
+        cube([tabWidth,pivotTolerance,2*tabThickness+tabSeperation+tabTolerance*2]);
 }
         
         

@@ -1,50 +1,61 @@
-width = 235;
+use </Users/vickeryj/Code/OpenSCAD/hinge_test.scad>;
+
+/* small roll
+width = 232;
 height = 50;
-depth = 50;
-wall_thickness = 1;
+depth = 50;*/
+
+$fn=70;
+
+//big roll
+width = 220;
+height = 65;
+depth = 65;
+wall_thickness = 4;
+
+
 cutout_edge_y = 13;
 cutout_edge_x = 20;
-wall_width = 7.5;
-num_slats = 6;
+num_slats = 5;
+slat_thickness = 12;
 
 module box_bottom(width, depth, height, wall_thickness) {
     difference() {
-        cube([width, depth, height]);
-        translate([wall_thickness, wall_thickness, (wall_thickness) + .001])
-            cube([
-                    width - (2 * wall_thickness), 
-                    depth - (2 * wall_thickness), 
-                    height - (3* wall_thickness)
-                 ]);
+        cube([width+2*wall_thickness, depth+2*wall_thickness, height+2*wall_thickness]);
+        translate([wall_thickness, wall_thickness, wall_thickness])
+            cube([width, depth, height + wall_thickness*4]);
 
-    };
+    }
 };
 
+//box_bottom(width, depth, height, wall_thickness);
 
-module box_side_cutouts(width, depth, height, wall_width) {
+
+module box_side_cutouts(width, depth, height, wall_thickness) {
     //cut out top and bottom
-    translate([wall_width, wall_width, -0.01])
-        cube([width - wall_width*2, depth - wall_width*2, height + .02]);
+    translate([wall_thickness, wall_thickness, -wall_thickness])
+        cube([width, depth, height + wall_thickness*4]);
     //cut out front and back
-    translate([wall_width, -0.01, wall_width])
-        cube([width - wall_width*2, depth+.02, height-wall_width*2]);
+    translate([wall_thickness, -wall_thickness, wall_thickness])
+        cube([width, depth + wall_thickness*4, height]);
     //cut out sides
-    translate([-.01, wall_width, wall_width])
-        cube([width+.02, depth - wall_width*2, height-wall_width*2]);
+    translate([-wall_thickness, wall_thickness, wall_thickness])
+        cube([width + wall_thickness*4, depth, height]);
 };
 
+//box_side_cutouts(width, depth, height, wall_thickness);
 
 module slats(num_slats) {
-    space = (width - wall_width)/(num_slats+1);
-    for (x = [space:space:width-wall_width]) {
+    space = (width +2*wall_thickness - slat_thickness)/(num_slats+1);
+    for (x = [space:space:width-slat_thickness]) {
         translate([x, 0, 0])
-            cube([wall_width, depth, wall_thickness]);
+            cube([slat_thickness, depth+wall_thickness*2, wall_thickness]);
     }
-    for (x = [space:space:width-wall_width]) {
-        translate([x, 0, 0])
-            cube([wall_width, wall_thickness, height]);
-        translate([x, depth-wall_thickness, 0])
-            cube([wall_width, wall_thickness, height]);
+    for (x = [space:space:width-wall_thickness]) {
+        translate([x, 0, wall_thickness])
+            cube([slat_thickness, wall_thickness, height]);
+        translate([x, depth+wall_thickness, wall_thickness])
+            cube([slat_thickness, wall_thickness, height]);
     }
 }
 
@@ -52,10 +63,168 @@ module slatted_box() {
     slats(num_slats);
     difference() {
         box_bottom(width, depth, height, wall_thickness);
-        box_side_cutouts(width, depth, height, wall_width);
+        box_side_cutouts(width, depth, height, wall_thickness);
     }
 }
 
+//slatted_box();
+
+num_slices = 3;
+slice_size = (width+2*wall_thickness)/num_slices+.02;
+
+module slice(s) {
+    intersection() {
+        box_bottom(width, depth, height, wall_thickness);
+        translate([s*slice_size-.01, 0, 0]) cube(slice_size);
+    }
+}
+
+
+module joiner(width, depth, height, thickness) {
+    translate([0, 0, 0])
+        cube([width,thickness, height]);    
+    translate([0,thickness,0])
+        cube([width,depth, thickness]);        
+    translate([0, depth+thickness, 0])
+        cube([width, thickness, height]);    
+}
+
+//slice(0);
+
+module middle_base() {
+    slice(1);
+    translate([slice_size-10, wall_thickness, wall_thickness])
+        joiner(20, depth-joiner_thickness*2, height-10, joiner_thickness);
+    translate([slice_size*2-10, wall_thickness, wall_thickness])
+        joiner(20, depth-joiner_thickness*2, height-10, joiner_thickness);    
+    
+    translate([slice_size+10, depth, height+wall_thickness/2])
+      male_hinge();
+    translate([slice_size*2-10-tabWidth, depth, height+wall_thickness/2])
+      male_hinge();
+    translate([width/2, wall_thickness, height+3]) {
+        difference() {
+            cube([8, 8, 4]);
+            translate([4, 4, 2+.01])
+            cylinder(h = 3, r = 2.5, center = false);
+        }
+    }
+}
+
+tabThickness = 1.85;
+tabWidth = wall_thickness+.02;
+tabSeperation = 1.3;
+backLength = 5;
+pivotTolerance = 1;
+
+module male_hinge() {
+    translate([tabWidth+tabSeperation, tabThickness, backLength+tabThickness+pivotTolerance])
+        rotate([270,0,90])
+            insidePart();
+}
+
+middle_base();
+
+//slice(2);
+
+
+
+// -- top
+
+module top() {
+    r = (depth - (cutout_edge_y * 2))/2;
+    difference() {
+        cube([width, depth+wall_thickness*2, wall_thickness]);
+        translate([cutout_edge_x+r, cutout_edge_y + r + wall_thickness, -.001])
+            cylinder(wall_thickness + .002, r, r);
+        translate([width - cutout_edge_x - r, cutout_edge_y + r + wall_thickness, -.001])
+            cylinder(wall_thickness + .002, r, r);
+        translate([cutout_edge_x + r, cutout_edge_y + wall_thickness, -.001])
+            cube([width - (2 * cutout_edge_x) - 2 * r, 
+                  depth - (2 * cutout_edge_y),
+                  wall_thickness + .002]);
+        translate([slice_size+10+pivotTolerance/3, depth+wall_thickness-pivotTolerance+.01, -.01])
+            negative_female();
+        translate([slice_size*2-10-tabWidth+pivotTolerance/3, depth+wall_thickness-pivotTolerance+.01, -.01])
+            negative_female();
+        translate([width/2+4, wall_thickness*2+4, -2])
+            cylinder(h = 3, r = 2.5, center = false);
+    };
+    translate([width/2, wall_thickness*2, - 1]) {
+        difference() {
+            cube([8, 8, 1]);
+            translate([4, 4, -.01])
+                cylinder(h = 3, r = 2.5, center = false);
+            }
+        }
+
+}
+//translate([0, -wall_thickness, height + wall_thickness*2+0])
+//translate([0, -depth-50, 0])
+//top();
+
+
+
+//        translate([slice_size*2-10-tabWidth, 0, height+wall_thickness])
+module negative_female() {
+    translate([0, tabThickness+tabSeperation, tabWidth/2]) 
+            rotate([90,270,90])
+                negativeOutsidePart();
+
+}
+
+
+/* thickness test
+cube([20, 2, 20]);
+translate([22, 0, 0])
+cube([20, 3, 20]);
+translate([44, 0, 0])
+cube([20, 4, 20]);
+*/
+
+
+//slice with circle cutouts
+/*cutout_r = min(width, depth)/2.5;
+module slice_with_holes() {
+difference() {
+slice(0);
+
+
+
+//left
+translate([-0.01, depth/2+wall_thickness, height/2+wall_thickness])
+rotate([0, 90, 0])
+cylinder(h=wall_thickness+.02, r = cutout_r, center = false);
+
+//bottom
+translate([slice_size/2,depth/2+wall_thickness+.01,0])
+rotate([0, 0, 90])
+cylinder(h=wall_thickness+.02, r = cutout_r, center = false);
+
+//front
+translate([slice_size/2,wall_thickness+.01,height/2+wall_thickness])
+rotate([90, 0, 0])
+cylinder(h=wall_thickness+10, r = cutout_r, center = false);
+
+//back
+translate([slice_size/2,depth+2*wall_thickness+.01,height/2+wall_thickness])
+rotate([90, 0, 0])
+cylinder(h=wall_thickness+.02, r = cutout_r, center = false);
+
+}
+}
+
+slice_with_holes();
+*/
+
+
+joiner_thickness = 2;
+//translate([slice_size/2+slice_size/4, wall_thickness, wall_thickness])
+//    joiner(slice_size/2, depth-joiner_thickness*2, height, joiner_thickness);
+
+
+/*
+flat printing
 module slice(left = false, center = false, right = false) {
    difference() {
        slatted_box();
@@ -80,30 +249,30 @@ module front_middle_slice() {
     difference (){
         difference() {
             slice(center = true);
-            translate([0, wall_width, -.01])
+            translate([0, wall_thickness, -.01])
                 cube([width, depth+wall_thickness+.02, height+.02]);
         };
         translate([0, wall_thickness, -.01])
-            cube([width, wall_width+.01, wall_thickness+.02]);
+            cube([width, wall_thickness+.01, wall_thickness+.02]);
     };
     translate([width/3+width/3/2/2, 0, wall_thickness])
-        cube([width/3/2, wall_width, 2*wall_thickness]);
+        cube([width/3/2, wall_thickness, 2*wall_thickness]);
 }
 
 module front_left_slice() {
     difference() {
         difference() {
             slice(left = true);
-            translate([-.01, wall_width, -.01])
+            translate([-.01, wall_thickness, -.01])
                 cube([width, depth+wall_thickness+.02, height+.02]);
         }
         translate([0, wall_thickness, -.01])
-            cube([width, wall_width, wall_thickness+.02]);
+            cube([width, wall_thickness, wall_thickness+.02]);
         translate([-.01, wall_thickness, 0])
-            cube([wall_thickness+.02, wall_width+.01, height+.01]);
+            cube([wall_thickness+.02, wall_thickness+.01, height+.01]);
     }
     translate([wall_thickness, 0, wall_thickness])
-        cube([width/3/2, wall_width, 2*wall_thickness]);
+        cube([width/3/2, wall_thickness, 2*wall_thickness]);
 
 }
 
@@ -114,11 +283,11 @@ module side_left_slice() {
             cube([width, depth+.02, height+.02]);
     }
     translate([wall_thickness, wall_thickness, (height-3*wall_thickness)-.01])
-        cube([wall_width, depth-2*wall_thickness, wall_thickness]);
-    translate([wall_thickness, wall_width, height-2*wall_thickness])
-        cube([wall_width, depth-2*wall_width, wall_thickness*2]);
-    translate([wall_thickness, wall_width, wall_thickness])
-        cube([wall_width, depth-2*wall_width, wall_thickness*2]);
+        cube([wall_thickness, depth-2*wall_thickness, wall_thickness]);
+    translate([wall_thickness, wall_thickness, height-2*wall_thickness])
+        cube([wall_thickness, depth-2*wall_thickness, wall_thickness*2]);
+    translate([wall_thickness, wall_thickness, wall_thickness])
+        cube([wall_thickness, depth-2*wall_thickness, wall_thickness*2]);
 }
 
 module bottom_middle_slice() {
@@ -133,16 +302,16 @@ module back_left_slice() {
     difference() {
         difference() {
             slice(left = true);
-            translate([-0.01, -wall_width-wall_thickness, -0.01])
+            translate([-0.01, -wall_thickness-wall_thickness, -0.01])
                 cube([width+.02, depth+wall_thickness-0.01, height+.02]);;
         }
-        translate([0, depth - wall_width - wall_thickness, -.01])
-            cube([width, wall_width, wall_thickness+.02]);
-        translate([-.01, depth - wall_width - wall_thickness, 0])
-            cube([wall_thickness+.02, wall_width+.01, height+.01]);
+        translate([0, depth - wall_thickness - wall_thickness, -.01])
+            cube([width, wall_thickness, wall_thickness+.02]);
+        translate([-.01, depth - wall_thickness - wall_thickness, 0])
+            cube([wall_thickness+.02, wall_thickness+.01, height+.01]);
     }
-    translate([wall_thickness, depth-wall_width-wall_thickness, wall_thickness])
-        cube([width/3/2, wall_width, 2*wall_thickness]);
+    translate([wall_thickness, depth-wall_thickness-wall_thickness, wall_thickness])
+        cube([width/3/2, wall_thickness, 2*wall_thickness]);
 }
 
 
@@ -153,10 +322,12 @@ module back_right_side_slice() {
     front_left_slice();
 };
 
+*/
+
 //translate([0, -.5, 0])
 //rotate([90,0,0])
 //front_middle_slice();
-
+/*
 translate([0, -5, 0])
 rotate([90,0,0])
 front_left_slice();
@@ -164,6 +335,7 @@ front_left_slice();
 translate([width/3, 0, 0])
 rotate([0,-90,0])
 side_left_slice();
+*/
 
 //back_left_slice();
 
@@ -173,44 +345,3 @@ side_left_slice();
 
 //bottom_middle_slice();
 
-
-/* -- top
-$fn=30;
-
-r = (depth - (cutout_edge_y * 2))/2;
-
-difference() {
-    translate([0, -depth - 2, 0]) {
-        difference() {
-            cube([width, depth, wall_thickness]);
-            translate([cutout_edge_x+r, cutout_edge_y + r, -.001])
-                cylinder(wall_thickness + .002, r, r);
-            translate([width - cutout_edge_x - r, cutout_edge_y + r, -.001])
-                cylinder(wall_thickness + .002, r, r);
-            translate([cutout_edge_x + r, cutout_edge_y, -.001])
-                cube([width - (2 * cutout_edge_x) - 2 * r, 
-                      depth - (2 * cutout_edge_y),
-                      wall_thickness + .002]);
-        };
-    };
-    translate([0, -depth - 2, 0])
-    translate([width/2 + .001, -.001, -.001])    
-        cube([width+.002, depth+.002, wall_thickness+.002]);
-
-};
-
-*/
-
-
-
-
-/*
-translate([0, -4, height + open_amount/2]) {
-    translate([wall_thickness, wall_thickness, 0]) {
-        difference() {
-            cube([width - 2 * wall_thickness, depth - 2 * wall_thickness, 2*wall_thickness]);
-            translate([2*wall_thickness, 2*wall_thickness, -.001])
-                cube([width - (8 * wall_thickness), depth - 4 * wall_thickness, 2*wall_thickness + .002]);
-        }
-     }
-}*/
