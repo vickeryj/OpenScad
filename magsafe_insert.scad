@@ -12,13 +12,13 @@ height = 6;
 module base() {
     points = [
       [  0,  0,  0 ],  //0
-      [ 146,  0,  0 ],  //1
-      [ 139,  166,  0 ],  //2
-      [  7,  166,  0 ],  //3
+      [ 145.5,  0,  0 ],  //1
+      [ 138.5,  165.5,  0 ],  //2
+      [  6.4,  165.5,  0 ],  //3
       [  -2,  0,  height ],  //4
       [ 148,  0,  height ],  //5
-      [ 141,  166,  height ],  //6
-      [  5,  166,  height ]]; //7
+      [ 141,  165.5,  height ],  //6
+      [  5,  165.5,  height ]]; //7
       
     faces = [
       [0,1,2,3],  // bottom
@@ -34,31 +34,40 @@ module base() {
 //base();
 
 module slot() {
-    cube([3, 80, 4]);
+    cube([4.5, 86, 4]);
 }
 
 case_camera_bump = 42;
 
 
-difference() {
-    base();
-    translate([24.5, 45, -.01]) slot();
-    translate([24.5+3+91, 45, -.01]) slot();
-    translate([146/2, 166/2, 0]) rotate([90, 90, 0]) magsafe_void();
-    translate([65, 166-53, height-4-8]) cube([50,50,42]);
-    translate([66, 13.1, -.01])
-        linear_extrude(height = 4) {
-            arc(9, 5, 0, -90);
-        }
-    translate([43, 4, -.01]) cube([23, 4, 4]);
-    translate([43, 13.1, -.01])
-        linear_extrude(height = 4) {
-            arc(9, 5, -90, -180);
-        }
-    translate([34, 13, -.01]) cube([4, 160, 4]);
+
+module all_together() {
+    difference() {
+        base();
+        
+        translate([23.5, 42, -.01]) slot();
+        translate([23.5+4.5+88.5, 42, -.01]) slot();
+        
+        translate([62, 166-53, height-4-8]) cube([43,43,10]);
+        
+        translate([146/2, 166/2, .4]) rotate([90, 90, 0]) magsafe_void();
+        translate([71, 46, -.01]) cube([4, 10, 4]);
+        translate([80, 46, -.01])
+            linear_extrude(height = 4) {
+                arc(9, 5, 180, 270);
+            }
+        translate([80, 37, -.01]) cube([24, 4, 4]);
+        translate([10, 4, -.01]) cube([125, 30, 4]);
+        translate([103.1, 32, -.01])
+            linear_extrude(height = 4) {
+                arc(9, 5, 0, 90);
+            }
+        translate([34, 13, -.01]) cube([4, 160, 4]);
+    }
 }
 
-
+//projection(cut=true) rotate([180, 0, 0]) all_together();
+all_together();
 
 module spacers() {
 color("blue", .1) translate([0, 0, 0]) cube([24.5, 80, 10]);
@@ -103,7 +112,7 @@ HAND_DEPTH = 6.5; // how far down the hand of the arm hangs down from the perch
 BOTTOM_THICKNESS_FACTOR = 1.1; // how thick the bottom is relative to the ring depth
 BODY_WIDTH_FACTOR = 1.1; // how wide the bottom body is relative to the magsafe width
 
-$fn = 30; // turn this down to a lower number if your computer is struggling
+$fn = 60; // turn this down to a lower number if your computer is struggling
 
 // computed
 body_width = MAGSAFE_WIDTH * BODY_WIDTH_FACTOR;
@@ -150,8 +159,8 @@ module magsafe_void() {
     loop_inner_radius = (MAGSAFE_WIDTH) / 2;
     cord_length = 80;
     rotate([0,90,0]) translate([0,0,-EPSILON]) union() {
-        translate([0,0,-MAGSAFE_DEPTH+.01]) cylinder(MAGSAFE_DEPTH+.02, loop_inner_radius, loop_inner_radius);
-        translate([-30,0,-1.5]) rotate([0,90,0]) cylinder(cord_length, CORD_THICKNESS/2, CORD_THICKNESS/2, center=true);
+        translate([0,0,-MAGSAFE_DEPTH+.01]) cylinder(MAGSAFE_DEPTH+2, loop_inner_radius, loop_inner_radius);
+        //translate([-30,0,-1.5]) rotate([0,90,0]) cylinder(cord_length, CORD_THICKNESS/2, CORD_THICKNESS/2, center=true);
         
     }
 }
