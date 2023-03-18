@@ -20,7 +20,7 @@ module magnet_test(hole_height, hole_diameter, height_step, diameter_step) {
                 translate([hole_x, hole_y, height-current_hole_height+.01])
                     cylinder(h = current_hole_height, d = current_hole_diameter, center = false);
                 translate([hole_x, hole_y, -.2])
-                    cylinder(h = height+.02, d = .4, center = false);
+                    cylinder(h = height+.02, d = 2, center = false);
 
 
              }
@@ -34,5 +34,13 @@ module magnet_test(hole_height, hole_diameter, height_step, diameter_step) {
 }
 
 
-magnet_test(3, 5.55, .2, .05);
+//magnet_test(3, 5.55, .2, .05);
+//magnet_test(2.4, 5.40, .2, .05);
+//magnet_test(2.8, 5.30, .2, .05);
 
+// winner is 2.8 or 3.0, 5.30
+
+//after EM tuning -- start with measured magnet size + padding
+magnet_test(2.8, 5.2, .2, .05);
+
+// 2.6, 5.2 at .24 layer hight
