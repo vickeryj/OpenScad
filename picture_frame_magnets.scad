@@ -1,11 +1,11 @@
-$fn = 60;
+$fs = .4;
 
 front_depth = 2;
-back_depth = 5.5;
+back_depth = 5.64;
 
 picture_thickness = .1;
 clearance = .2;
-tab_padding = 2;
+tab_padding = 2.5;
 
 
 
@@ -46,16 +46,25 @@ module back(picture_width, picture_height) {
         translate([picture_width/2+back_border, (front_depth+picture_thickness)/2, back_border]) tab_sphere();
         translate([picture_width/2+back_border, (front_depth+picture_thickness)/2, picture_height+back_border]) tab_sphere();
     }
+    module magnet_hole() {
+        rotate([90, 0, 0]) 
+        cylinder(h = 3, d = 5.6, center = false);
+    }
     difference() {
         frame();
         translate([0, -picture_thickness, 0]) tab_slots();
+        translate([picture_width/2+back_border+8, back_depth+.01, picture_height/2+back_border])
+            magnet_hole();
+        translate([picture_width/2+back_border-8, back_depth+.01, picture_height/2+back_border])
+            magnet_hole();
     }
 }
 
 
 
+picture_width = 54.5;
+picture_height = 86.5;
 
 
-
-color("red", 1) translate([back_border+clearance, -.01, back_border+clearance]) front(36, 36);
-back(36, 36);
+translate([picture_width + 10, picture_height, 0]) rotate([90,0,0]) color("red", 1) front(picture_width, picture_height);
+translate([0, 0, back_depth]) rotate([-90,0,0]) back(picture_width, picture_height);
