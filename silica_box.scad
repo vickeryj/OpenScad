@@ -1,10 +1,11 @@
-width = 20;
-depth = 10;
+width = 198;
+depth = 100;
 gap = 1.2;
 stand_height = 4;
 wall_thickness = 2;
+top_thickness = 3;
 height = 10;
-tolerance = .3;
+tolerance = .2;
 top_height = 5;
 top_support_thickness = 6;
 
@@ -12,6 +13,8 @@ module stand() {
     for (i = [0:gap*2:width]) {
         translate([i,0,0]) cube([gap, depth, stand_height]);
     }
+    cube([width, wall_thickness, gap]);
+    translate([0, depth-wall_thickness, 0]) cube([width, wall_thickness, gap]);
 }
 
 module box(width = width, depth = depth, height = height) {
@@ -43,16 +46,18 @@ module box_bottom() {
 
 module box_top() {
     difference() {
-        box(width + wall_thickness*2 + tolerance, depth+wall_thickness*2+tolerance, top_height);
+        box(width + wall_thickness*2 + tolerance, depth+wall_thickness*2+tolerance, top_height+top_thickness);
         side_slots(width + wall_thickness + tolerance, depth+wall_thickness+tolerance, top_height, wall_thickness);
     }
-    //translate([wall_thickness,(depth+wall_thickness*2)/2-top_support_thickness/2,top_height - wall_thickness]) cube([width+tolerance*2+.02, top_support_thickness, wall_thickness]);
+    translate([wall_thickness,(depth+wall_thickness*2)/2-top_support_thickness/2,top_height]) cube([width+tolerance*2+.02, top_support_thickness, top_thickness]);
+    translate([wall_thickness,(depth+wall_thickness*2)/4-top_support_thickness/2,top_height]) cube([width+tolerance*2+.02, top_support_thickness/2, top_thickness]);
+    translate([wall_thickness,(depth+wall_thickness*2)/4*3-top_support_thickness/2,top_height]) cube([width+tolerance*2+.02, top_support_thickness/2, top_thickness]);
     for (i = [wall_thickness+gap:gap*2:width+wall_thickness]) {
-        translate([i,wall_thickness-.01,top_height - wall_thickness]) cube([gap, depth+2*tolerance+.02, wall_thickness]);
+        translate([i,wall_thickness-.01,top_height]) cube([gap, depth+2*tolerance+.02, top_thickness]);
     }
 }
 
 box_bottom();
 //translate([-wall_thickness-tolerance/2,-wall_thickness-tolerance/2,stand_height+height-top_height+wall_thickness]) box_top();
-//translate([0, -10, top_height]) rotate([180,0,0]) box_top();
+translate([-wall_thickness, -5, top_height+top_thickness]) rotate([180,0,0]) box_top();
 
