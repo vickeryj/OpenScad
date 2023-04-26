@@ -1,13 +1,14 @@
 width = 198;
 depth = 100;
 gap = 1.2;
-stand_height = 4;
+stand_height = 3;
 wall_thickness = 2;
-top_thickness = 3;
+top_thickness = 2.5;
 height = 10;
 tolerance = .2;
-top_height = 5;
-top_support_thickness = 6;
+top_height = 5.2;
+top_support_thickness = 4;
+bridge_gap = 17.1;
 
 module stand() {
     for (i = [0:gap*2:width]) {
@@ -25,13 +26,24 @@ module box(width = width, depth = depth, height = height) {
 }
 
 module side_slots(width = width, depth = depth, height = height, inset = 0) {
-    for (i = [inset+gap*2:gap*2:width-gap*2]) {
-        translate([i, -0.01, gap]) cube([gap, wall_thickness+.02, height - gap*2]);
-        translate([i, depth-wall_thickness-.01+inset, gap]) cube([gap, wall_thickness+.02, height - gap*2]);
+    //for (i = [inset+gap*2:gap*2:width-gap*2]) {
+    for (i = [inset+gap*2:bridge_gap+gap*2:width-gap*2]) {
+        //translate([i, -0.01, gap]) cube([gap, wall_thickness+.02, height - gap*2]);        
+        //translate([i, depth-wall_thickness-.01+inset, gap]) cube([gap, wall_thickness+.02, height - gap*2]);
+        for (j = [gap:2*gap:height-gap*2]) {
+            translate([i, -.01, j]) cube([bridge_gap, wall_thickness+.02, gap]);
+            translate([i, depth-wall_thickness-.01+inset, j]) cube([bridge_gap, wall_thickness+.02, gap]);
+        }
     }
-    for (i = [inset+gap*2:gap*2:depth-gap*2]) {
-        translate([-.01, i, gap]) cube([wall_thickness+.02, gap, height - gap*2]);
-        translate([width-wall_thickness-.01+inset, i, gap]) cube([wall_thickness+.02, gap, height - gap*2]);
+    //for (i = [inset+gap*2:gap*2:depth-gap*2]) {
+    //    translate([-.01, i, gap]) cube([wall_thickness+.02, gap, height - gap*2]);
+    //    translate([width-wall_thickness-.01+inset, i, gap]) cube([wall_thickness+.02, gap, height - gap*2]);
+    //}
+    for (i = [inset+gap*2:bridge_gap+gap*2:depth-gap*2]) {
+        for (j = [gap:gap*2: height - gap*2]) {
+            translate([-.01, i, j]) cube([wall_thickness+.02, bridge_gap, gap]);
+            translate([width-wall_thickness-.01+inset, i, j]) cube([wall_thickness+.02, bridge_gap, gap]);
+        }
     }
 }
 
@@ -58,6 +70,6 @@ module box_top() {
 }
 
 box_bottom();
-//translate([-wall_thickness-tolerance/2,-wall_thickness-tolerance/2,stand_height+height-top_height+wall_thickness]) box_top();
+//translate([-wall_thickness-tolerance/2,-wall_thickness-tolerance/2,stand_height+height-top_height]) box_top();
 translate([-wall_thickness, -5, top_height+top_thickness]) rotate([180,0,0]) box_top();
 
