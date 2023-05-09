@@ -1,11 +1,9 @@
-
 mount_depth = 113.4;
-//mount_depth = 70-12;
 mount_thickness = 5.4;
 wire_diameter = 4.1;
 inset = 12.5;
 wire_gap = 20;
-mount_width = 65;// wire_gap+inset*2;
+mount_width = 65;
 
 $fn = 120;
 
@@ -14,8 +12,6 @@ module top_mount() {
         cube([mount_width, mount_depth, mount_thickness]);
         wires();
         
-//        translate([mount_width/3,mount_depth/6,0]) nut_hole();
-//        translate([mount_width/3*2,mount_depth/6,0]) nut_hole();
         translate([mount_width/3,mount_depth/6*2.5,0]) nut_hole();
         translate([mount_width/3*2,mount_depth/6*2.5,0]) nut_hole();
     }
@@ -26,8 +22,6 @@ module bottom_mount() {
         cube([mount_width, mount_depth, mount_thickness]);
         translate([0,0,mount_thickness]) wires();
         
-//        translate([mount_width/3,mount_depth/6,0]) bolt_hole();
-//        translate([mount_width/3*2,mount_depth/6,0]) bolt_hole();
         translate([mount_width/3*2,mount_depth/6*2.5,-mount_thickness*3]) cylinder(h = mount_thickness*4+.02, d = bolt_thickness);
         translate([mount_width/3,mount_depth/6*2.5,-mount_thickness*3]) cylinder(h = mount_thickness*4+.02, d = bolt_thickness);
     }
@@ -77,11 +71,8 @@ module connector_without_cutouts() {
         cube([(slot_bottom_width-slot_inside_width)/2, connector_depth - slot_thickener_start, slot_thickening]);
 }
 
-//translate([-10,0, -slot_height - slot_bottom_thickness ]) cube(11.3+10.8);//22.1
-
 corner_cut_width = (slot_bottom_width - slot_inside_width)/2;
 corner_cut_depth = 10;
-//center_cut_width = 23.4;
 center_cut_width = 24;
 center_cut_depth = 8;
 
@@ -95,22 +86,74 @@ module connector() {
             cube([corner_cut_width+.01, corner_cut_depth, slot_bottom_thickness+.02]);
         translate([(mount_width-center_cut_width)/2, slot_front_inset-.01, -slot_bottom_thickness-slot_height-.01])
             cube([center_cut_width, center_cut_depth, slot_bottom_thickness+slot_height+.02]);
+    }
+}
+
+module connector_with_bolt_holes() {
+    difference() {
+        connector();
         translate([mount_width/3,mount_depth/6*2.5,-slot_bottom_thickness-slot_height]) bolt_hole();
         translate([mount_width/3*2,mount_depth/6*2.5,-slot_bottom_thickness-slot_height]) bolt_hole();
     }
 }
 
-/*
-intersection() {
-    translate([5,30,0]) cube(24);
-    bottom_mount();
-}
-translate([30,0,0]) {
+
+module mount_test_print() {
     intersection() {
         translate([5,30,0]) cube(24);
-        translate([0,0,mount_thickness]) top_mount();
+        bottom_mount();
     }
-}*/
-//connector();
-bottom_mount();
-translate([80,0,mount_thickness]) top_mount();
+    translate([30,0,0]) {
+        intersection() {
+            translate([5,30,0]) cube(24);
+            translate([0,0,mount_thickness]) top_mount();
+        }
+    }
+}
+
+connector_slot_width = 52;
+connector_slot_height = slot_height+slot_bottom_thickness;
+connector_slot_depth = 32;
+connector_slot_plate = 30;
+connector_slot_thickener_start = 10;
+
+thickener_width = (slot_bottom_width-slot_inside_width)/2;
+
+module connector_slot() {
+    difference() {
+        cube([connector_slot_width, connector_slot_depth+connector_slot_plate, connector_slot_height]);
+        translate([(connector_slot_width-slot_bottom_width)/2, -.01, -.01])
+            cube([slot_bottom_width, connector_slot_depth, slot_bottom_thickness+.02]);
+        translate([(connector_slot_width-slot_inside_width)/2, -.01, slot_bottom_thickness-.01])
+            cube([slot_inside_width, connector_slot_depth, slot_height+.02]);
+        
+    }
+    translate(
+                [(
+                    connector_slot_width-slot_bottom_width)/2,
+                    connector_slot_thickener_start,
+                    slot_bottom_thickness-slot_thickening+.01
+                ]) 
+            cube([thickener_width, connector_slot_depth - connector_slot_thickener_start, slot_thickening]);
+    translate(
+                [
+                    connector_slot_width - (connector_slot_width-slot_bottom_width)/2-thickener_width,
+                    connector_slot_thickener_start,
+                    slot_bottom_thickness-slot_thickening+.01
+                ]) 
+            cube([thickener_width, connector_slot_depth - connector_slot_thickener_start, slot_thickening]);
+}
+
+//connector_slot();
+module connector_slot_with_bolt_holes() {
+    difference() {
+        translate([connector_slot_width,0,slot_bottom_thickness+slot_height]) rotate([180,0,180]) connector_slot();
+        translate([connector_slot_width/4,connector_slot_depth + connector_slot_plate/2,0]) bolt_hole();
+        translate([connector_slot_width/4*3,connector_slot_depth + connector_slot_plate/2,0]) bolt_hole();
+    }
+}
+connector_slot_with_bolt_holes();
+
+//connector_with_bolt_holes();
+//bottom_mount();
+//translate([80,0,mount_thickness]) top_mount();
