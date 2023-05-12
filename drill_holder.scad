@@ -116,19 +116,18 @@ module mount_test_print() {
 
 
 connector_slot_width = 52;
-connector_slot_bottom_height = 5.2;
-connector_slot_bottom_thickness = 5.2;
+connector_slot_bottom_height = 4.8;
+connector_slot_bottom_thickness = 6.4;
 connector_slot_height = connector_slot_bottom_height+connector_slot_bottom_thickness;
 connector_slot_depth = 32;
 connector_slot_plate = 7;
 connector_slot_thickener_start = 10;
 
 connector_slot_inside_width = 35.7;
-connector_slot_bottom_width = 43.7;
-connector_slot_thickening = 1;
+connector_slot_bottom_width = 44.1;
+connector_slot_thickening = .9;
 
 thickener_width = (connector_slot_bottom_width-connector_slot_inside_width)/2;
-
 
 module connector_slot() {
     difference() {
@@ -137,7 +136,6 @@ module connector_slot() {
             cube([connector_slot_bottom_width, connector_slot_depth, connector_slot_bottom_thickness+.02]);
         translate([(connector_slot_width-connector_slot_inside_width)/2, -.01, connector_slot_bottom_thickness-.01])
             cube([connector_slot_inside_width, connector_slot_depth, connector_slot_bottom_height+.02]);
-        
     }
     translate(
                 [(
@@ -155,10 +153,16 @@ module connector_slot() {
             cube([thickener_width, connector_slot_depth - connector_slot_thickener_start, connector_slot_thickening]);
 }
 
+top_gap_height = 2.5;
+top_gap_width = 6.7;
+top_gap_distance_to_left = 21;
+
+
 module connector_slot_with_bolt_holes() {
     translate([connector_slot_width,0,connector_slot_height]) rotate([180,0,180]) connector_slot();
     difference() {
         translate([0,0, connector_slot_height]) cube([connector_slot_width, connector_slot_depth+connector_slot_plate, connector_slot_plate]);
+        #translate([(connector_slot_width - connector_slot_bottom_width)/2+top_gap_distance_to_left, -.01, connector_slot_height-.01]) cube([top_gap_width, connector_slot_depth, top_gap_height]);
         #translate([connector_slot_width/7*2.04,(connector_slot_depth + connector_slot_plate)/2,connector_slot_height]) bolt_hole(18);
         #translate([connector_slot_width/7*4.95,(connector_slot_depth + connector_slot_plate)/2,connector_slot_height]) bolt_hole(18);
     }
