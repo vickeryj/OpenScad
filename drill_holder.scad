@@ -170,7 +170,7 @@ module connector_slot_with_bolt_holes() {
 
 module short_top_mount() {
     intersection() {
-        translate([0, (mount_depth - connector_slot_depth)/2.7, 0]) cube([mount_width, connector_slot_depth, mount_thickness]);
+        translate([0, 27.9, 0]) cube([mount_width, connector_slot_depth+connector_slot_plate, mount_thickness]);
         top_mount();
     }
 }
@@ -200,5 +200,5 @@ module print_mounts() {
 }
 
 //display_connector_slot();
-
-connector_slot_with_bolt_holes();
+//connector_slot_with_bolt_holes();
+print_mounts();
