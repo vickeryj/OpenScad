@@ -1,8 +1,8 @@
-sharpie_max_diam = 11.9;
-sharpie_min_diam = 11.6;
+sharpie_max_diam = 12;
+sharpie_min_diam = 11.7;
 clip_width = 17;
 clip_depth = 13;
-clip_height = 20;
+clip_height = 15;
 
 difference() {
     translate([-clip_width/2, -clip_depth/2, 0]) cube([clip_width, clip_depth, clip_height]);
