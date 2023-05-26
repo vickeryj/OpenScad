@@ -61,10 +61,10 @@ module hanger_cutout() {
 
 module slider_cuts() {
     cut_length = picture_depth+picture_slot_thickness*2+.02;
-    translate([-picture_slot_thickness-.01, cut_length/2-picture_slot_thickness-.01, slider_cut_thickness])
+    translate([-picture_slot_thickness-.01, cut_length/2-picture_slot_thickness-.01, back_wall_thickness/2])
         prismoid(size1=[slider_cut_thickness,cut_length], size2=[0,cut_length], h=slider_cut_depth, orient=RIGHT);
 
-    translate([picture_width+picture_slot_thickness+.01, cut_length/2-picture_slot_thickness-.01, slider_cut_thickness])
+    translate([picture_width+picture_slot_thickness+.01, cut_length/2-picture_slot_thickness-.01, back_wall_thickness/2])
         prismoid(size1=[slider_cut_thickness,cut_length], size2=[0,cut_length], h=slider_cut_depth, orient=LEFT);
 }
 
@@ -82,7 +82,7 @@ module front_frame() {
           front_thickness, frame_width);
     
     //rail guides    
-    rail_guide_height = (back_wall_thickness+picture_slot_thickness)/2+slider_cut_thickness;
+    rail_guide_height = back_wall_thickness+picture_slot_thickness;
     translate([overlap/2-tolerance, overlap, -rail_guide_height+tolerance])
         cube([overlap/2, picture_depth+picture_slot_thickness*2, rail_guide_height-tolerance]);                
     translate([picture_width+overlap+picture_slot_thickness*2+tolerance, overlap, -rail_guide_height+tolerance])
@@ -92,9 +92,9 @@ module front_frame() {
     
     //rails
     rail_length = picture_depth+picture_slot_thickness*2;
-    translate([overlap-tolerance, rail_length/2+overlap, -rail_guide_height+slider_cut_thickness/2+tolerance+.2])
+    translate([overlap-tolerance, rail_length/2+overlap, -back_wall_thickness/2-picture_slot_thickness])
         prismoid(size1=[slider_cut_thickness,rail_length], size2=[0,rail_length], h=slider_cut_depth, orient=RIGHT);    
-    translate([picture_width+overlap+picture_slot_thickness*2+tolerance, rail_length/2+overlap, -rail_guide_height+slider_cut_thickness/2+tolerance+.2])
+    translate([picture_width+overlap+picture_slot_thickness*2+tolerance, rail_length/2+overlap,  -back_wall_thickness/2-picture_slot_thickness])
         prismoid(size1=[slider_cut_thickness,rail_length], size2=[0,rail_length], h=slider_cut_depth, orient=LEFT);
 }
 
