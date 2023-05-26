@@ -10,7 +10,7 @@ back_wall_thickness = 3;
 hanger_width = 20;
 hanger_depth = 10;
 
-picture_slot_thickness = .2;
+picture_slot_thickness = .4;
 
 slider_cut_depth = 2;
 slider_cut_thickness = 2;
@@ -18,7 +18,8 @@ slider_cut_thickness = 2;
 frame_width = 10;
 front_thickness = 2;
 overlap = 3;
-tolerance = .1;
+frame_extension = frame_width - overlap;
+tolerance = .3;
 slider_rail_depth = slider_cut_depth;
 slider_rail_thickness = slider_cut_thickness - tolerance*2;
 
@@ -77,24 +78,24 @@ module full_back() {
 }
 
 module front_frame() {
-    frame(picture_width + picture_slot_thickness * 2 + overlap * 2,
-          picture_depth + picture_slot_thickness * 2 + overlap * 2,
+    frame(picture_width + picture_slot_thickness * 2 + frame_extension * 2,
+          picture_depth + picture_slot_thickness * 2 + frame_extension * 2,
           front_thickness, frame_width);
     
     //rail guides    
     rail_guide_height = back_wall_thickness+picture_slot_thickness;
-    translate([overlap/2-tolerance, overlap, -rail_guide_height+tolerance])
-        cube([overlap/2, picture_depth+picture_slot_thickness*2, rail_guide_height-tolerance]);                
-    translate([picture_width+overlap+picture_slot_thickness*2+tolerance, overlap, -rail_guide_height+tolerance])
-        cube([overlap/2, picture_depth+picture_slot_thickness*2, rail_guide_height-tolerance]);
-    translate([overlap/2-tolerance,picture_depth+overlap+picture_slot_thickness*2,-rail_guide_height+tolerance])
-        cube([picture_width+overlap+picture_slot_thickness*2+tolerance*2, overlap/2, rail_guide_height-tolerance]);
+    translate([frame_extension/2-tolerance, frame_extension, -rail_guide_height+tolerance])
+        cube([frame_extension/2, picture_depth+picture_slot_thickness*2, rail_guide_height-tolerance]);                
+    translate([picture_width+frame_extension+picture_slot_thickness*2+tolerance, frame_extension, -rail_guide_height+tolerance])
+        cube([frame_extension/2, picture_depth+picture_slot_thickness*2, rail_guide_height-tolerance]);
+    translate([frame_extension/2-tolerance,picture_depth+frame_extension+picture_slot_thickness*2,-rail_guide_height+tolerance])
+        cube([picture_width+frame_extension+picture_slot_thickness*2+tolerance*2, frame_extension/2, rail_guide_height-tolerance]);
     
     //rails
     rail_length = picture_depth+picture_slot_thickness*2;
-    translate([overlap-tolerance, rail_length/2+overlap, -back_wall_thickness/2-picture_slot_thickness])
+    translate([frame_extension-tolerance, rail_length/2+frame_extension, -back_wall_thickness/2-picture_slot_thickness-tolerance/2])
         prismoid(size1=[slider_cut_thickness,rail_length], size2=[0,rail_length], h=slider_cut_depth, orient=RIGHT);    
-    translate([picture_width+overlap+picture_slot_thickness*2+tolerance, rail_length/2+overlap,  -back_wall_thickness/2-picture_slot_thickness])
+    translate([picture_width+frame_extension+picture_slot_thickness*2+tolerance, rail_length/2+frame_extension,  -back_wall_thickness/2-picture_slot_thickness-tolerance/2])
         prismoid(size1=[slider_cut_thickness,rail_length], size2=[0,rail_length], h=slider_cut_depth, orient=LEFT);
 }
 
@@ -102,7 +103,7 @@ full_back();
 
 //front_frame();
 
-//translate([-picture_slot_thickness-overlap, -picture_slot_thickness-overlap, back_wall_thickness+picture_slot_thickness]) front_frame();
+//color("red", .1) translate([-picture_slot_thickness-frame_extension, -picture_slot_thickness-frame_extension, back_wall_thickness+picture_slot_thickness+tolerance/2]) front_frame();
 
 rotate([180,0,0]) translate([0,20,0]) front_frame();
 
