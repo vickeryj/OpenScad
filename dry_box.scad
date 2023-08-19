@@ -22,8 +22,7 @@ module box(height) {
                      
         up(wall_thickness)
             offset_sweep(offset(rbox, r=-wall_thickness, closed=true,check_valid=false),
-                     height=height, steps=22, check_valid=false,
-                     bottom=os_circle(r=4), top=os_circle(r=-1,extra=1));
+                     height=height, steps=22, check_valid=false);
 
     }
 }
@@ -58,15 +57,16 @@ module filament_hole() {
             screw_hole("M10", length=filament_hole_length+.01, thread=true, anchor=TOP);
 }
 
-reinforcement_size = filament_hole_d*3;
+reinforcement_width = filament_hole_d*3;
+reinforcement_height = filament_hole_d*2;
 
 module box_top() {
     
-    reinforcement = square(reinforcement_size);
+    reinforcement = square([reinforcement_width, reinforcement_height]);
 
     box(interior_height-bottom_height);
-    up((interior_height-bottom_height)/2-filament_hole_d)
-        right(interior_width/2-reinforcement_size/2)
+    up(hole_offset-reinforcement_height/4)
+        right(interior_width/2-reinforcement_width/2)
         back(wall_thickness*2) 
         xrot(90) offset_sweep(reinforcement, height=3*wall_thickness, check_valid=false, steps=22,
                      bottom=os_circle(r=3), top=os_circle(r=3));
@@ -77,22 +77,26 @@ module box_bottom() {
     lip();
 }
 
+hole_offset = interior_height/2;
+hole_angle = -45;
+
 module box_top_with_filament_hole() {
     difference() { 
         box_top();
-        up((interior_height-bottom_height)/2)
+        up(hole_offset)
             right(interior_width/2)
             fwd(filament_hole_length/2-3)
-            xrot(-45)
+            xrot(hole_angle)
             cylinder(h = filament_hole_length, r = 5);
     }
-    up((interior_height-bottom_height)/2)
+    up(hole_offset)
         right(interior_width/2)
         fwd(filament_hole_length/2-3)
-        xrot(-45)
+        xrot(hole_angle)
     filament_hole();
 }
 
-//box_bottom();
-//translate([150, 0, 0]) box_top_with_filament_hole();
-filament_hole();
+box_bottom();
+//translate([150, 0, 200]) 
+//xrot(180) zrot(180) box_top_with_filament_hole();
+//filament_hole();
