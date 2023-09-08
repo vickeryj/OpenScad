@@ -10,22 +10,27 @@ wall_thickness = 4;
 y_cutout = 23 * 2;
 x_cutout = 28 * 2;
 cut = 2;
-tolerance = 0.1;
+tolerance = .3;
 hinge_width = 20;
 
 box = square([width+wall_thickness*2,depth+wall_thickness*2]);
-rbox = round_corners(box, method="smooth", cut=cut);
+rbox = round_corners(box, method="smooth", cut=cut, $fn=32);
 
 module bottom() {
+    ibox = square([width,depth]);
+    ribox = round_corners(ibox, method="smooth", cut=cut, $fn=32);
     difference(){
-      offset_sweep(rbox, height=height, check_valid=false, steps=22,
-                   bottom=os_teardrop(r=2));
-      up(wall_thickness)
-        offset_sweep(offset(rbox, r=-wall_thickness, closed=true,check_valid=false),
-                     height=height-2+.01, steps=22, check_valid=false,
-                     bottom=os_circle(r=4));
+        offset_sweep(rbox, 
+                    height=height, 
+                    steps=22,
+                    bottom=os_teardrop(r=2));
+        right(wall_thickness) back(wall_thickness) up(wall_thickness)
+            offset_sweep(ribox,
+                        height = height,
+                        steps=22,
+                        bottom=os_circle(r=4));
     }
-    hinge_padding = .5;
+    hinge_padding = .2;
     right(width/3*2+hinge_padding/2) up(height) hinge(hinge_width-hinge_padding);
     right(width/3-hinge_width+hinge_padding/2) up(height) hinge(hinge_width-hinge_padding);
 }
@@ -41,10 +46,11 @@ module top() {
             offset_sweep(rcutout, height = wall_thickness+.02, top=os_circle(r=-2), bottom=os_circle(r=-2));
         right(width/3*2) hinge(hinge_width, slop=.1);
         right(width/3-hinge_width) hinge(hinge_width, slop=.1);
+        back(depth+wall_thickness) top_mask();
     }
     
     lip = square([width-tolerance*2,depth-tolerance*2]);
-    rlip = round_corners(lip, method="smooth", cut=cut);
+    rlip = round_corners(lip, method="smooth", cut=cut, $fn=32);
     lip_cut = square([
                         width-tolerance*2-wall_thickness*2,
                         depth-tolerance*2-wall_thickness*2]);
@@ -70,25 +76,36 @@ module hinge(len, slop=get_slop()) {
                   $slop=slop);
 }
 
-/*
-$fn = 6;
-up(height) top();
-up(height) back(depth) yrot(90) #cylinder(h = width, d = 4);
-//up(depth+height+wall_thickness*2) back(depth+wall_thickness) xrot(-90) top();
-//bottom();
+module top_mask() {
+    difference() {
+        right(.01) back(wall_thickness/2) cube([width+wall_thickness*2-.02, wall_thickness/2, wall_thickness]);
+        up(wall_thickness/2) back(wall_thickness/2) yrot(90)
+            cylinder(h = width+wall_thickness*2, d = wall_thickness);
 
+    }
+}
+
+/* print */
+up(wall_thickness) xrot(180) top();
+back(10) bottom();
+
+
+/* assembled
+up(height) up(3) top();
+bottom();
 */
 
-$fn=32;
+
+/* test fit
 xrot(180) 
 intersection() {
-    right(40) back(65) down(10) cube(45);
+    right(0) back(-2) down(10) cube(85);
     top();
 }
 
-xrot(90) back(20)
+down(height-5) back(10)
 intersection() {
-    right(40) back(depth+wall_thickness+.01) up(50) cube(40);
+    right(0) back(-2) up(60) cube(80);
     bottom();
 }
-
+*/
