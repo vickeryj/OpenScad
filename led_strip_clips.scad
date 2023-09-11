@@ -4,7 +4,7 @@ include <BOSL2/rounding.scad>
 module clipped_pin() {
     rotate([90,0,0])
         difference() {
-            rotate([0,0,90]) translate([-80,-100,0]) import("/Users/vickeryj/Downloads/cable_frame_anchor_x6.stl");
+            rotate([0,0,90]) translate([-80,-100,0]) import("/Users/vickeryj/Code/OpenSCAD/cable_frame_anchor_x6.stl");
             translate([0,0,0]) cube([9.5,20,10]);
         }
 }
@@ -27,22 +27,23 @@ angled_base();
 module clip() {
 
     clip_thickness = 1.5;
+    clip_depth = 3.5;
 
     clip_path = turtle([
         "angle",45, "turn", "move",2, 
         "angle",-90, "turn", "move",4,
-        "angle",45, "turn", "move",7,
+        "angle",45, "turn", "move",clip_depth,
         "angle",90, "turn", "move",19,
-            "turn", "move",7,
+            "turn", "move",clip_depth,
         "angle",45, "turn", "move",4,
         "angle",-90, "turn", "move",2,
             "turn", "move",1,
             "turn", "move",1,
         
        "angle",90, "turn", "move",3.5,
-        "angle",-45, "turn", "move",8.5,
+        "angle",-45, "turn", "move",clip_depth+1.5,
         "angle",-90, "turn", "move",21,
-            "turn", "move",8.5,
+            "turn", "move",clip_depth+1.5,
         "angle",-45, "turn", "move",3.5,
         "angle",90, "turn", "move",1,
         "angle",-90, "turn", "move",1
@@ -51,4 +52,4 @@ module clip() {
         bottom=os_circle(r=.5), top=os_circle(r=.5));
 }
 
-rotate([90,-37,0]) translate([-3.1,-2,0]) clip();
+rotate([90,-37,0]) translate([.4,-2,0]) clip();
