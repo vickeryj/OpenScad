@@ -15,10 +15,10 @@ $fn = 120;
 // 13*1.6 = 20.8, measured outer width = 20.7
 
 difference() {
-    scale([1.6, 1, 1]) color("orange") cylinder(h = 4.7, d = 15);
+    scale([1.6, 1, 1]) color("orange") cylinder(h = 4.9, d = 15);
     translate([0, 0, 1]) scale([1.65, 1, 1]) color("green") cylinder(h = 6, d = 11.45);
     translate([0,0,-.01]) linear_extrude(height = .6)
-        rotate([0, 180, 0]) text("NO!", size = 6, font = "Helvetica", halign = "center", valign = "center");
+        rotate([0, 180, 0]) text("NO!", size = 7, halign = "center", font="Helvetica:style=Bold", valign = "center");
 }
 
 // h of 4.7 could have been a touch higher, but it overall works well
