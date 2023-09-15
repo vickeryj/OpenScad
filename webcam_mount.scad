@@ -33,6 +33,7 @@ module camera_clip() {
 }
 
 mount_thickness = 5.8;
+screw_length = 10;
 module extrusion_mount() {
     module mount() {
         rotate([90,0,0])
@@ -50,7 +51,7 @@ module extrusion_mount() {
                     size2=[0,mount_thickness], 
                     h=12,
                     shift=[8,0]);
-                up(9.9) left(3) yrot(-38) screw("M7", length=10);
+                up(screw_length-2) left(2) yrot(-38) screw("M7", length=screw_length-2);
             }
         }
     }
@@ -70,7 +71,7 @@ module small_ball() {
     }
     difference() {
         outer();
-        down(0.01) screw_hole("M7", length=shaft_height+2, thread=true, anchor=BOTTOM);
+        down(0.01) screw_hole("M7", length=screw_length, thread=true, anchor=BOTTOM);
     }
 
 }
@@ -90,10 +91,10 @@ module small_seat() {
 
 gap = 1;
 module small_ball_nut() {
-    threaded_nut(nutwidth=20, id=ball_diameter, h=ball_diameter*.7-gap, pitch=2, anchor=BOTTOM);
+    threaded_nut(nutwidth=ball_diameter + 6*wall_width, id=ball_diameter + 2*wall_width, h=ball_diameter*.7-gap, pitch=2, anchor=BOTTOM);
     
     difference() {
-        up(ball_diameter*.7-wall_width-gap) cylinder(d = ball_diameter+2*wall_width, h=wall_width);
+        up(ball_diameter*.7-wall_width-gap) cylinder(d = ball_diameter+6*wall_width, h=wall_width);
         up(ball_diameter*.7-wall_width*2-gap) sphere(d = ball_diameter);
     }
 }
@@ -107,6 +108,6 @@ camera_backplate();*/
 
 //print plate
 up(ball_diameter*.7-gap) xrot(180) small_ball_nut();
-right(20) up(shaft_height + ball_diameter) down(ball_diameter+shaft_height+wall_width-plate_thickness) small_ball();
+//right(20) up(shaft_height + ball_diameter) down(ball_diameter+shaft_height+wall_width-plate_thickness) small_ball();
 //up(mount_thickness) fwd(15) xrot(90) extrusion_mount();
-fwd(30) right(40) camera_backplate();
+//fwd(30) right(40) camera_backplate();
