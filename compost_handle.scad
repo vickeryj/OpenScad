@@ -13,6 +13,8 @@ strap_insert_depth = 40;
 
 strap_piece_width = (width_across-handle_width)/2;
 
+strap_screw_length = 12;
+through_thickness = 4;
 
 module strap_piece() {
 
@@ -38,9 +40,18 @@ corner_r = 12;
 
     side_r = 1;
     offset_sweep(handle_path(), height=strap_width, bottom=os_circle(r=side_r), top=os_circle(r=side_r));
+    
+    
+    intersection() {
+        right(strap_screw_length/2+strap_thickness-.01) up(strap_width/2) back(strap_width) yrot(-90) screw("M12", length = strap_screw_length, thread_len=strap_screw_length - through_thickness);
+        cube([strap_screw_length, 2*strap_width, strap_width]);
+    }
  }
  
- //handle_strip();
+ module strap_nut() {
+    nut("M12", nutwidth=25, thickness=strap_screw_length - through_thickness+2, bevel2=false);
+    cylinder(d=25, h=2);
+}
  
  insert_height = 4;
  
@@ -52,8 +63,8 @@ corner_r = 12;
  module handle_full() {
     difference() {
         right(strap_piece_width) yrot(90) cyl(h = handle_width, d = handle_diameter, anchor=BOTTOM, rounding = 4);
-        fwd(strap_depth + handle_diameter/2) down(strap_width/2) strap_piece();
-        fwd(strap_depth + handle_diameter/2) up(strap_width/2) right(width_across) yrot(180) strap_piece();
+        scale([1, 1.05, 1.05]) fwd(strap_depth + handle_diameter/2) down(strap_width/2)  strap_piece();
+        scale([1, 1.05, 1.05]) fwd(strap_depth + handle_diameter/2) up(strap_width/2) right(width_across) yrot(180) strap_piece();
         xrot(90) {
             for( i = [1,3]) {
                 for( j = [0, handle_width-strap_insert_depth]) {
@@ -83,10 +94,12 @@ corner_r = 12;
     }
  }
  
- handle_full();
- strap_piece();
- //handle_bottom();
- //handle_top();
+//handle_full();
+strap_piece();
+//handle_bottom();
+//handle_top();
+//strap_nut();
+
  
  //cube(width_across);
  
@@ -94,7 +107,9 @@ corner_r = 12;
  - 1. heatset holes in handle top
  - 2. screw holes in handle bottom
  - 3. round handle edges
- 4. screws on sides of straps
- 6. nuts for inside of cans
+ //4. screws on sides of straps
+ //6. nuts for inside of cans
+ //7. make clearance in handle for straps
+ 8. screw holes in straps
  */
  
