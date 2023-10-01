@@ -63,7 +63,7 @@ module strap_piece() {
  }
  
  module strap_nut() {
-    nut(strap_screw, nutwidth=25, thickness=strap_screw_length - through_thickness+1, bevel2=false);
+    nut(strap_screw, nutwidth=25, thickness=strap_screw_length - through_thickness+2, bevel2=false);
     cylinder(d=25, h=2);
 }
  
