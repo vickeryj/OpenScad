@@ -78,12 +78,12 @@ module strap_piece() {
  module handle_full() {
     difference() {
         intersection() {
-            right(strap_piece_width) yrot(90) scale([1,1.25,1]) cyl(h = handle_width, d = handle_diameter*.85, anchor=BOTTOM, rounding = 4);
+            right(strap_piece_width) yrot(90) scale([1,1,1]) cyl(h = handle_width, d = handle_diameter, anchor=BOTTOM, rounding = 4);
             right(strap_piece_width) fwd(handle_diameter/2-handle_clip_flat) down(handle_diameter/2) cube([handle_width, handle_diameter-handle_clip_flat*2, handle_diameter]);
         }
         
         scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) down(strap_width/2)  strap_piece();
-        #scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) up(strap_width/2) right(width_across+strap_thickness*2) yrot(180) strap_piece();
+        scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) up(strap_width/2) right(width_across+strap_thickness*2) yrot(180) strap_piece();
         xrot(90) {
             for( i = [1,3]) {
                 for( j = [0, handle_width-strap_insert_depth]) {
@@ -114,10 +114,23 @@ module strap_piece() {
     }
  }
  
-$fn=32;
+ module display() {
+    $fn=6;
+    strap_piece_with_holes();
+    back(strap_depth-.3) up(handle_diameter/2-strap_thickness/2-1) back(handle_diameter/2-strap_thickness/2) handle_full();
+    up(strap_width) right(width_across+strap_thickness*2) yrot(180) strap_piece_with_holes();
+    right(strap_thickness+strap_screw_length) up(strap_width/2) back(strap_width) yrot(-90) strap_nut();
+    right(strap_thickness+width_across-strap_screw_length) up(strap_width/2) back(strap_width) yrot(90) strap_nut();
+ }
+ 
+ module print_tray() {
+     $fn=32;
+ }
+ 
+display();
  
 //handle_full();
-strap_piece_with_holes();
+
 //up(handle_diameter/2 - handle_clip_flat) back(strap_depth) handle_bottom();
 //handle_bottom();
 //back(50) up(handle_diameter/2) xrot(180) handle_top();
