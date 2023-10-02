@@ -5,25 +5,25 @@ include <BOSL2/screws.scad>
 $slop=0.11; //trident
 
 
-width_across = 260;
+width_across = 260; // this will be the inside width of the handle
 
-handle_width = 110;
-handle_diameter = 24;
-handle_clip_flat = .6;
+handle_width = 110; // the width of the handle part
+handle_diameter = 24; // handle cylinder diameter, but the handle gets scaled up for easier printing
+handle_clip_flat = .6; // how much is clipped off the top and bottom of the handle for easier printing
 
-strap_depth = 140;
-strap_thickness = 6;
-strap_width = 15;
+strap_depth = 140; // from the bottom of the strap to the inside top of the strap
+strap_thickness = 6; // thickness being how far the strap extends from the bolt
+strap_width = 15; // width being how far across the handle the strap spreads, it needs to be less than handle_diameter 
 
-strap_insert_depth = 40;
+strap_insert_depth = 40; // how far into the the handle the strap inserts
 
-strap_piece_width = (width_across-handle_width)/2;
+strap_piece_width = (width_across-handle_width)/2 + strap_thickness; //calculated
 
-strap_screw_length = 12;
-through_thickness = 4;
-strap_screw = "M18";
+strap_screw_length = 18; // how far into the bucket the screw will go
+through_thickness = 8; // how much should be left unthreaded to better sit in the holes in the bucket
+strap_screw = "M18"; // this should be a screw wider than strap_width
 
-corner_r = 12;
+corner_r = 12; // the radius for the strap corner
 
 module strap_piece() {
 
@@ -53,6 +53,7 @@ module strap_piece() {
     }
  }
  
+ 
  module strap_piece_with_holes() {
     difference() {
         strap_piece();
@@ -70,19 +71,19 @@ module strap_piece() {
  insert_height = 4;
  
   module m3_insert() {
-    cylinder(d2=5.59, d1=5.16, h=insert_height-.8);
+    cylinder(d2=5.59, d1=5.16, h=insert_height-.8); //d2 and d1 are a bit too larg on the trident
     down(0.8) cylinder(d=4.3, h=.8);
  }
  
  module handle_full() {
     difference() {
         intersection() {
-            right(strap_piece_width) yrot(90) cyl(h = handle_width, d = handle_diameter, anchor=BOTTOM, rounding = 4);
+            right(strap_piece_width) yrot(90) scale([1,1.25,1]) cyl(h = handle_width, d = handle_diameter*.85, anchor=BOTTOM, rounding = 4);
             right(strap_piece_width) fwd(handle_diameter/2-handle_clip_flat) down(handle_diameter/2) cube([handle_width, handle_diameter-handle_clip_flat*2, handle_diameter]);
         }
         
         scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) down(strap_width/2)  strap_piece();
-        scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) up(strap_width/2) right(width_across) yrot(180) strap_piece();
+        #scale([1, 1.02, 1.02]) fwd(strap_depth + handle_diameter/2 - strap_thickness/2) up(strap_width/2) right(width_across+strap_thickness*2) yrot(180) strap_piece();
         xrot(90) {
             for( i = [1,3]) {
                 for( j = [0, handle_width-strap_insert_depth]) {
@@ -113,20 +114,21 @@ module strap_piece() {
     }
  }
  
- $fn=32;
+$fn=32;
  
 //handle_full();
-//down(strap_depth + handle_diameter/2) back(strap_width/2) xrot(90) strap_piece();
 strap_piece_with_holes();
-up(handle_diameter/2 - handle_clip_flat) handle_bottom();
+//up(handle_diameter/2 - handle_clip_flat) back(strap_depth) handle_bottom();
 //handle_bottom();
 //back(50) up(handle_diameter/2) xrot(180) handle_top();
+//back(strap_depth) up(strap_width/2) xrot(-90) handle_top();
 //handle_top();
 //fwd(30) strap_nut();
 
 
  
  //cube(width_across);
+//back(strap_depth+strap_thickness-20) right(strap_thickness) cube(width_across);
  
  /* todo
  - 1. heatset holes in handle top
