@@ -13,6 +13,11 @@ cut = 2;
 tolerance = .3;
 hinge_width = 20;
 
+//even bigger roll
+width = 225;
+height = 83;
+depth = 83;
+
 box = square([width+wall_thickness*2,depth+wall_thickness*2]);
 rbox = round_corners(box, method="smooth", cut=cut, $fn=32);
 
