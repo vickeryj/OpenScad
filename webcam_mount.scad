@@ -7,6 +7,7 @@ include <BOSL2/screws.scad>
 camera_width=37;
 camera_height=35;
 plate_thickness=2;
+$slop = 0.1;
 
 module camera_backplate() {
     sparse_wall(h=camera_width, l=camera_height, thick=plate_thickness, strut=2, orient=LEFT);
@@ -81,33 +82,42 @@ nut_pitch = 2;
 module small_seat() {
 
     difference() {
-        threaded_rod(d = ball_diameter + 2*wall_width, l = ball_diameter*.7, pitch = 2, anchor=BOTTOM, bevel1="reverse");
+        threaded_rod(d = ball_diameter + 3*wall_width, l = ball_diameter*.7, pitch = 2, anchor=BOTTOM, bevel1="reverse");
         up(wall_width*2) cylinder(h = ball_diameter, d = ball_diameter-wall_width);
-        up(ball_diameter/2 + wall_width) sphere(d=ball_diameter);
+        up(ball_diameter/2 + wall_width) sphere(d=ball_diameter+$slop);
         up(ball_diameter/3) fwd(ball_diameter/2+wall_width*2) cube([wall_width, ball_diameter+wall_width*4, ball_diameter]);
         zrot(90) up(ball_diameter/3) fwd(ball_diameter/2+wall_width*2) cube([wall_width, ball_diameter+wall_width*4, ball_diameter]);
     }
 }
 
-gap = 1;
 module small_ball_nut() {
-    threaded_nut(nutwidth=ball_diameter + 6*wall_width, id=ball_diameter + 2*wall_width, h=ball_diameter*.7-gap, pitch=2, anchor=BOTTOM);
+    nut_short = 1;
+    threaded_nut(nutwidth=ball_diameter + 6*wall_width, id=ball_diameter + 3*wall_width, h=ball_diameter*.7+wall_width/2-nut_short, pitch=2, ibevel1=false, anchor=BOTTOM);
     
     difference() {
-        up(ball_diameter*.7-wall_width-gap) cylinder(d = ball_diameter+6*wall_width, h=wall_width);
-        up(ball_diameter*.7-wall_width*2-gap) sphere(d = ball_diameter);
+        up(ball_diameter*.7+wall_width/2-wall_width-nut_short) cylinder(d = ball_diameter+6*wall_width, h=wall_width);
+        up(ball_diameter*.7-nut_short-1) sphere(d = ball_diameter);
     }
 }
 
+
 //camera_clip();
-//$fn=32;
+//extrusion_mount(0);
+$fn=32;
 /* assembled
 up(plate_thickness/2) small_ball_nut();
 xrot(180) down(ball_diameter+shaft_height+wall_width-plate_thickness) small_ball();
-camera_backplate();*/
+camera_backplate();
+*/
 
 //print plate
-up(ball_diameter*.7-gap) xrot(180) small_ball_nut();
+//up(ball_diameter*.7) xrot(180) small_ball_nut();
 //right(20) up(shaft_height + ball_diameter) down(ball_diameter+shaft_height+wall_width-plate_thickness) small_ball();
 //up(mount_thickness) fwd(15) xrot(90) extrusion_mount();
-//fwd(30) right(40) camera_backplate();
+fwd(30) right(40) camera_backplate();
+
+/*test
+intersection() {
+    small_ball_nut();
+    down(1) small_seat();
+} */
