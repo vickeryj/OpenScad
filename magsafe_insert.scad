@@ -4,6 +4,7 @@
 // back depth 132
 // 
 
+include <BOSL2/std.scad>
 
 
 height = 6;
@@ -48,7 +49,7 @@ module all_together() {
         translate([23.5, 42, -.01]) slot();
         translate([23.5+4.5+88.5, 42, -.01]) slot();
         
-        translate([62, 166-53, height-4-8]) cube([43,43,10]);
+        translate([62, 166-53.5, height-4]) cube([48,49,10]);
         
         translate([146/2, 166/2, .4]) rotate([90, 90, 0]) magsafe_void();
         translate([71, 46, -.01]) cube([4, 10, 4]);
