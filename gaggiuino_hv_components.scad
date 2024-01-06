@@ -69,7 +69,7 @@ module snubber_slide() {
                 cuboid([snubber_w/3*2, wall_thickness, wall_height]);
         }
         up(wall_height/2-rail_thickness/2)
-        right(snubber_w/3+wall_thickness/2)
+        left(snubber_w/3+wall_thickness/2)
         back(snubber_d/2)
             cuboid([wall_thickness, snubber_d+wall_thickness*2, wall_height]);
     }
@@ -77,7 +77,7 @@ module snubber_slide() {
 
 intersection() {
     base();
-    left(13) back(6) cube([28, 22, 30]);
+    left(15) back(6) cube([28, 22, 30]);
 }
 
-base();
+//base();
