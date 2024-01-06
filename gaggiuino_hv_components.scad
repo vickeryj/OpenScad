@@ -1,7 +1,7 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 
-$slop=0.11;
+$slop=0.11; //.11 is too much, screws are loose``
 
 base_w = 110;
 base_d = 90;
@@ -64,6 +64,13 @@ module snubber_slide() {
                 }
             }
         }
+        
+        back(snubber_d-rail_thickness/2) up(top_rail_center-rail_thickness/2) back(rail_thickness/2) xrot(90) zrot(90) prismoid(size1=[rail_thickness*1.5, snubber_w/3*2], size2=[0,snubber_w/3*2], h=rail_thickness);
+        
+        fwd(rail_thickness/2) up(top_rail_center-rail_thickness/2) back(rail_thickness/2) xrot(270) zrot(90) prismoid(size1=[rail_thickness*1.5, snubber_w/3*2], size2=[0,snubber_w/3*2], h=rail_thickness);
+        
+        
+        
         for(i = [-wall_thickness/2, snubber_d+wall_thickness/2]) {
             up(wall_height/2-rail_thickness/2) back(i) 
                 cuboid([snubber_w/3*2, wall_thickness, wall_height]);
