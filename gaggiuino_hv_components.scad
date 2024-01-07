@@ -58,6 +58,12 @@ module base() {
         right(component_padding_w+dimmer_centers[0]/2)
         back(dimmer_centers[1]+component_back+ss_back)
             stepdown_slot();
+            
+        for (i = [post_d/2, base_w-post_d/2]) {
+            for (j = [post_d/2, base_d-post_d/2]) {
+                up(corner_post_h/2) right(i) back(j) post(corner_post_h);
+            }
+        }
     }
     
 
@@ -66,7 +72,7 @@ module base() {
 module post(post_h = post_h) {
     difference() {
         cyl(d = post_d, h = post_h);
-        screw_hole("M3,4", thread = true);
+        up(post_h/2-2) screw_hole("M3,4", thread = true);
     }
 }
 
@@ -78,6 +84,7 @@ module posts(centers) {
         }
     }
 }
+
 
 module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
 
