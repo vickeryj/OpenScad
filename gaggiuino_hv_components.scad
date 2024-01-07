@@ -5,7 +5,7 @@ $slop=0.11;
 
 base_w = 103;
 base_d = 84;
-wall_thickness = 2;
+wall_thickness = 1.7;
 post_d = 6;
 post_h = 4;
 corner_post_h = 29;
@@ -16,15 +16,16 @@ ps_centers = [24.5, 60];
 component_padding_w = 7;
 component_back = 10;
 
-snubber_back = 2;
+snubber_back = 6;
 snubber_wall_height = 9;
 snubber_w = 31.5;
 snubber_d = 14;
 
-power_wall_height = 7;
-power_w = 12;
-power_d = 20.5;
+power_wall_height = 6;
+power_w = 14;
+power_d = 20;
 power_top_rail_center = 4;
+power_bottom_lift = .7;
 
 ss_slot_width = 5;
 ss_slot_height = 3;
@@ -41,16 +42,17 @@ module base() {
                 right(component_padding_w*1.5+relay_centers[0]) posts(ps_centers);
             }
         }
-        up(snubber_wall_height/2) right(snubber_w/3+wall_thickness/2) back(snubber_d/2+wall_thickness) // bottom left
-        right(dimmer_centers[0]+component_padding_w*1.5)
+        up(snubber_wall_height/2) back(snubber_d/2+wall_thickness)
+        right(dimmer_centers[0]+component_padding_w+relay_centers[0])
         back(relay_centers[1]+snubber_d+snubber_back)
+        zrot(90)
             slide(snubber_wall_height, snubber_w, snubber_d);
             
         up(power_wall_height/2)
         right(component_padding_w+dimmer_centers[0]/2)
         back(base_d - power_d/2)
         zrot(90) 
-            slide(power_wall_height, power_w, power_d, power_top_rail_center);
+            slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);
             
         up(ss_slot_height/2) 
         right(component_padding_w+dimmer_centers[0]/2)
@@ -62,7 +64,6 @@ module base() {
 }
 
 module post(post_h = post_h) {
-
     difference() {
         cyl(d = post_d, h = post_h);
         screw_hole("M3,4", thread = true);
@@ -78,7 +79,8 @@ module posts(centers) {
     }
 }
 
-module slide(wall_height, width, depth, top_rail_center=5) {
+module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
+
     rail_thickness = 1;
     
     //#cuboid([width/3*2, depth, wall_height]);
@@ -86,7 +88,7 @@ module slide(wall_height, width, depth, top_rail_center=5) {
     down(wall_height/2-rail_thickness/2) right(wall_thickness/2) {
         for(i = [-depth/2+rail_thickness/2, depth/2-rail_thickness/2]) {
             back(i) {
-                for(j = [0, top_rail_center]) {
+                for(j = [bottom_rail_lift, top_rail_center]) {
                     up(j) {
                         cuboid([width/3*2, rail_thickness, rail_thickness]);
                     }
@@ -123,6 +125,6 @@ module test_section() {
     }
 }
 
-//base();
+base();
 
-test_section();
+//test_section();
