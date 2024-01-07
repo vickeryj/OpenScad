@@ -3,8 +3,8 @@ include <BOSL2/screws.scad>
 
 $slop=0.11;
 
-base_w = 110;
-base_d = 90;
+base_w = 103;
+base_d = 82;
 wall_thickness = 2;
 post_d = 6;
 post_h = 4;
@@ -13,9 +13,9 @@ relay_centers = [21, 28];
 ps_centers = [24.5, 60];
 
 component_padding_w = 7;
-component_back = 14;
+component_back = 10;
 
-snubber_back = 18;
+snubber_back = 12;
 snubber_wall_height = 9;
 snubber_w = 31.5;
 snubber_d = 14;
@@ -23,20 +23,20 @@ snubber_d = 14;
 ss_slot_width = 5;
 ss_slot_height = 3;
 ss_slot_length = 6;
-ss_back = 11;
+ss_back = 6;
 
 module base() { 
     cuboid([base_w,base_d,wall_thickness]);
     up(wall_thickness/2) fwd(base_d/2) left(base_w/2) {
         up(post_h/2) right(component_padding_w) back(component_back) {
             posts(dimmer_centers);
-            right(component_padding_w*2+dimmer_centers[0]) {
+            right(component_padding_w*1.5+dimmer_centers[0]) {
                 posts(relay_centers);
-                right(component_padding_w*2+relay_centers[0]) posts(ps_centers);
+                right(component_padding_w*1.5+relay_centers[0]) posts(ps_centers);
             }
         }
         up(snubber_wall_height/2) right(snubber_w/3+wall_thickness/2) back(snubber_d/2+wall_thickness) // bottom left
-        right(dimmer_centers[0]+component_padding_w*2)
+        right(dimmer_centers[0]+component_padding_w*1.5)
         back(relay_centers[1]+snubber_d+snubber_back)
             snubber_slide();
             
