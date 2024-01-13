@@ -1,23 +1,14 @@
-include <BOSL2/std.scad>
-include <BOSL2/screws.scad>
-include <BOSL2/rounding.scad>
 
-$slop=0.11;
 
-$fn = 24;
+include <gaggiuino_common.scad>
 
 base_w = 103;
 base_d = 86;
-wall_thickness = 1.7;
-post_d = 6;
-post_h = 3;
+
 corner_post_h = 22;
 dimmer_centers = [21.5, 47];
 relay_centers = [21, 28];
 ps_centers = [24.5, 60];
-
-component_padding_w = 7;
-component_back = 10;
 
 snubber_back = 6;
 snubber_wall_height = 9;
@@ -38,18 +29,8 @@ ss_back = 6;
 module base() {
 
     difference() {
-        topbox = square([base_w,base_d], center=true);
-        rtopbox = round_corners(topbox, method="circle", r=post_d/2);
-        offset_sweep(rtopbox, 
-                    height=wall_thickness, 
-                    steps=22,
-                    bottom=os_circle(r=1));
-                    
-        for (i = [base_w/2 - post_d/2, -base_w/2 + post_d/2]) {
-            for (j = [base_d/2-post_d/2, -base_d/2+post_d/2]) {
-                left(i) fwd(j) up(2) yrot(180) screw_hole("M3,4", thread = false, head = "button");
-            }
-        }
+        plate(base_w, base_d, os_circle(r=1), os_circle(r=0));
+        plate_screws(base_w, base_d);
     }
                 
                 
@@ -82,54 +63,12 @@ module base() {
 
 }
 
-module post(post_h = post_h) {
-    difference() {
-        cyl(d = post_d, h = post_h);
-        up(post_h/2-2) screw_hole("M3,4", thread = true);
-    }
-}
-
 module posts(centers) {
     for(i = [0, centers[0]]) {
         right(i) post();
         for(j = [0, centers[1]]) {
             right(i) back(j) post();
         }
-    }
-}
-
-
-module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
-
-    rail_thickness = 1;
-    
-    //#cuboid([width/3*2, depth, wall_height]);
-    
-    down(wall_height/2-rail_thickness/2) right(wall_thickness/2) {
-        for(i = [-depth/2+rail_thickness/2, depth/2-rail_thickness/2]) {
-            back(i) {
-                for(j = [bottom_rail_lift, top_rail_center]) {
-                    up(j) {
-                        cuboid([width/3*2, rail_thickness, rail_thickness]);
-                    }
-                }
-            }
-        }
-        
-        back(depth/2-rail_thickness/2) up(top_rail_center-rail_thickness/2) back(rail_thickness/2) xrot(90) zrot(90) prismoid(size1=[rail_thickness*1.5, width/3*2], size2=[0,width/3*2], h=rail_thickness);
-        
-        fwd(depth/2+rail_thickness/2) up(top_rail_center-rail_thickness/2) back(rail_thickness/2) xrot(270) zrot(90) prismoid(size1=[rail_thickness*1.5, width/3*2], size2=[0,width/3*2], h=rail_thickness);
-        
-        
-        
-        for(i = [-depth/2-wall_thickness/2, depth/2+wall_thickness/2]) {
-            up(wall_height/2-rail_thickness/2) back(i) 
-                cuboid([width/3*2, wall_thickness, wall_height]);
-        }
-        up(wall_height/2-rail_thickness/2)
-        left(width/3+wall_thickness/2)
-        fwd(0)
-            cuboid([wall_thickness, depth+wall_thickness*2, wall_height]);
     }
 }
 
@@ -146,14 +85,7 @@ module test_section() {
 }
 
 module cover_solid() {
-    //cuboid([base_w,base_d,wall_thickness], rounding = .5);
-    
-    topbox = square([base_w,base_d,wall_thickness], center=true);
-    rtopbox = round_corners(topbox, method="circle", r=post_d/2);
-    offset_sweep(rtopbox, 
-                height=wall_thickness, 
-                steps=22,
-                top=os_circle(r=1));
+    plate(base_w, base_d, os_circle(r=0), os_circle(r=1));
     
     down(corner_post_h/2) {
         for(i = [base_d/2 - wall_thickness/2, -base_d/2+wall_thickness/2]) {
