@@ -35,8 +35,24 @@ ss_slot_height = 3;
 ss_slot_length = 6;
 ss_back = 6;
 
-module base() { 
-    cuboid([base_w,base_d,wall_thickness]);
+module base() {
+
+    difference() {
+        topbox = square([base_w,base_d,wall_thickness], center=true);
+        rtopbox = round_corners(topbox, method="circle", r=post_d/2);
+        offset_sweep(rtopbox, 
+                    height=wall_thickness, 
+                    steps=22,
+                    bottom=os_circle(r=1));
+                    
+        for (i = [base_w/2 - post_d/2, -base_w/2 + post_d/2]) {
+            for (j = [base_d/2-post_d/2, -base_d/2+post_d/2]) {
+                left(i) fwd(j) up(2) yrot(180) screw_hole("M3,4", thread = false, head = "button");
+            }
+        }
+    }
+                
+                
     up(wall_thickness/2) fwd(base_d/2) left(base_w/2) {
         up(post_h/2) right(component_padding_w) back(component_back) {
             posts(dimmer_centers);
@@ -155,8 +171,8 @@ module cover() {
     }
 }
 
-up(corner_post_h) cover();
+up(corner_post_h) up(wall_thickness) cover();
 
-//base();
+base();
 
 //test_section();
