@@ -176,6 +176,8 @@ heatsink_d = 16;
 heatsink_back_from_center = 15.5;
 heatink_left_from_center = 1;
 
+wire_d = 5;
+
 module cover_with_cutouts() {
     difference() {
         cover_solid();
@@ -185,11 +187,18 @@ module cover_with_cutouts() {
         right(component_padding_w) back(component_back) //ofset from corner the same as dimmer post  
         back(heatsink_back_from_center) left(heatink_left_from_center) //offset from bottom left post of dimmer
         cuboid([heatsink_w, heatsink_d, wall_thickness+.02]);
+        
+        for (i = [0, 1, 2]) {
+            for (j = [base_d/2-wall_thickness/2, -base_d/2+wall_thickness/2]) {
+                back(j) down(corner_post_h/3) right(base_w/3-base_w/3*i) xrot(90) cyl(h = wall_thickness+.02, d = wire_d);
+            }
+        }
     }
 }
 
-up(corner_post_h) up(wall_thickness) 
-#cover_with_cutouts();
+//up(corner_post_h) up(wall_thickness) 
+xrot(180) right(base_w+20)
+cover_with_cutouts();
 
 base();
 
