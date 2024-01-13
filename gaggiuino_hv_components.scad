@@ -84,25 +84,6 @@ module test_section() {
     }
 }
 
-module cover_solid() {
-    plate(base_w, base_d, os_circle(r=0), os_circle(r=1));
-    
-    down(corner_post_h/2) {
-        for(i = [base_d/2 - wall_thickness/2, -base_d/2+wall_thickness/2]) {
-            fwd(i) cuboid([base_w-post_d, wall_thickness, corner_post_h]);
-        }
-        for(i = [base_w/2-wall_thickness/2, -base_w/2+wall_thickness/2]) {
-            left(i) cuboid([wall_thickness, base_d-post_d, corner_post_h]);
-        }
-    }
-    
-    for (i = [base_w/2 - post_d/2, -base_w/2 + post_d/2]) {
-        for (j = [base_d/2-post_d/2, -base_d/2+post_d/2]) {
-            down(corner_post_h/2) left(i) fwd(j) yrot(180) post(corner_post_h);
-        }
-    }
-}
-
 heatsink_w = 25;
 heatsink_d = 16;
 heatsink_back_from_center = 15.5;
@@ -112,7 +93,7 @@ wire_d = 5;
 
 module cover_with_cutouts() {
     difference() {
-        cover_solid();
+        cover_solid(base_w, base_d, corner_post_h);
         
         up(wall_thickness/2)
         left(base_w/2) fwd(base_d/2) right(heatsink_w/2) back(heatsink_d/2) // start at bottom left

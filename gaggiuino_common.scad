@@ -76,3 +76,22 @@ module plate_screws(w,d) {
         }
     }
 }
+
+module cover_solid(w, d, corner_post_h) {
+    plate(w, d, os_circle(r=0), os_circle(r=1));
+    
+    down(corner_post_h/2) {
+        for(i = [d/2 - wall_thickness/2, -d/2+wall_thickness/2]) {
+            fwd(i) cuboid([w-post_d, wall_thickness, corner_post_h]);
+        }
+        for(i = [w/2-wall_thickness/2, -w/2+wall_thickness/2]) {
+            left(i) cuboid([wall_thickness, d-post_d, corner_post_h]);
+        }
+    }
+    
+    for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
+        for (j = [d/2-post_d/2, -d/2+post_d/2]) {
+            down(corner_post_h/2) left(i) fwd(j) yrot(180) post(corner_post_h);
+        }
+    }
+}

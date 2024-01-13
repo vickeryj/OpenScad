@@ -15,6 +15,10 @@ ads_post_over = 23.5;
 power_over = 12;
 power_w = 18;
 
+corner_post_h = 16;
+
+wire_d = 4;
+
 module base() {
 
     difference() {
@@ -50,4 +54,17 @@ module base() {
     }
 }
 
-base();
+module cover_with_cutouts() {
+    difference() {
+        cover_solid(base_w, base_d, corner_post_h);
+        for (i = [0, 1, 2]) {
+            for (j = [base_d/2-wall_thickness/2, -base_d/2+wall_thickness/2]) {
+                back(j) down(corner_post_h/3) right(base_w/3-base_w/3*i) xrot(90) cyl(h = wall_thickness+.02, d = wire_d);
+            }
+        }
+    }
+}
+
+//base();
+
+cover_with_cutouts();
