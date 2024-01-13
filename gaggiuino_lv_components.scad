@@ -65,6 +65,6 @@ module cover_with_cutouts() {
     }
 }
 
-//base();
-
+base();
+xrot(180) right(base_w+20)
 cover_with_cutouts();
