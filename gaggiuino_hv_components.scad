@@ -7,11 +7,11 @@ $slop=0.11;
 $fn = 24;
 
 base_w = 103;
-base_d = 84;
+base_d = 86;
 wall_thickness = 1.7;
 post_d = 6;
 post_h = 3;
-corner_post_h = 29;
+corner_post_h = 22;
 dimmer_centers = [21.5, 47];
 relay_centers = [21, 28];
 ps_centers = [24.5, 60];
@@ -38,7 +38,7 @@ ss_back = 6;
 module base() {
 
     difference() {
-        topbox = square([base_w,base_d,wall_thickness], center=true);
+        topbox = square([base_w,base_d], center=true);
         rtopbox = round_corners(topbox, method="circle", r=post_d/2);
         offset_sweep(rtopbox, 
                     height=wall_thickness, 
@@ -69,7 +69,7 @@ module base() {
             
         up(power_wall_height/2)
         right(component_padding_w+dimmer_centers[0]/2)
-        back(base_d - power_d/2)
+        back(base_d - power_d/2-2.5)
         zrot(90) 
             slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);
             
@@ -145,7 +145,7 @@ module test_section() {
     }
 }
 
-module cover() {
+module cover_solid() {
     //cuboid([base_w,base_d,wall_thickness], rounding = .5);
     
     topbox = square([base_w,base_d,wall_thickness], center=true);
@@ -171,7 +171,25 @@ module cover() {
     }
 }
 
-up(corner_post_h) up(wall_thickness) cover();
+heatsink_w = 25;
+heatsink_d = 16;
+heatsink_back_from_center = 15.5;
+heatink_left_from_center = 1;
+
+module cover_with_cutouts() {
+    difference() {
+        cover_solid();
+        
+        up(wall_thickness/2)
+        left(base_w/2) fwd(base_d/2) right(heatsink_w/2) back(heatsink_d/2) // start at bottom left
+        right(component_padding_w) back(component_back) //ofset from corner the same as dimmer post  
+        back(heatsink_back_from_center) left(heatink_left_from_center) //offset from bottom left post of dimmer
+        cuboid([heatsink_w, heatsink_d, wall_thickness+.02]);
+    }
+}
+
+up(corner_post_h) up(wall_thickness) 
+#cover_with_cutouts();
 
 base();
 
