@@ -1,13 +1,16 @@
 include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
+include <BOSL2/rounding.scad>
 
 $slop=0.11;
+
+$fn = 24;
 
 base_w = 103;
 base_d = 84;
 wall_thickness = 1.7;
 post_d = 6;
-post_h = 4;
+post_h = 3;
 corner_post_h = 29;
 dimmer_centers = [21.5, 47];
 relay_centers = [21, 28];
@@ -58,12 +61,6 @@ module base() {
         right(component_padding_w+dimmer_centers[0]/2)
         back(dimmer_centers[1]+component_back+ss_back)
             stepdown_slot();
-            
-        for (i = [post_d/2, base_w-post_d/2]) {
-            for (j = [post_d/2, base_d-post_d/2]) {
-                up(corner_post_h/2) right(i) back(j) post(corner_post_h);
-            }
-        }
     }
     
 
@@ -132,6 +129,34 @@ module test_section() {
     }
 }
 
-base();
+module cover() {
+    //cuboid([base_w,base_d,wall_thickness], rounding = .5);
+    
+    topbox = square([base_w,base_d,wall_thickness], center=true);
+    rtopbox = round_corners(topbox, method="circle", r=post_d/2);
+    offset_sweep(rtopbox, 
+                height=wall_thickness, 
+                steps=22,
+                top=os_circle(r=1));
+    
+    down(corner_post_h/2) {
+        for(i = [base_d/2 - wall_thickness/2, -base_d/2+wall_thickness/2]) {
+            fwd(i) cuboid([base_w-post_d, wall_thickness, corner_post_h]);
+        }
+        for(i = [base_w/2-wall_thickness/2, -base_w/2+wall_thickness/2]) {
+            left(i) cuboid([wall_thickness, base_d-post_d, corner_post_h]);
+        }
+    }
+    
+    for (i = [base_w/2 - post_d/2, -base_w/2 + post_d/2]) {
+        for (j = [base_d/2-post_d/2, -base_d/2+post_d/2]) {
+            down(corner_post_h/2) left(i) fwd(j) yrot(180) post(corner_post_h);
+        }
+    }
+}
+
+up(corner_post_h) cover();
+
+//base();
 
 //test_section();
