@@ -5,6 +5,8 @@ include <gaggiuino_common.scad>
 base_w = 103;
 base_d = 86;
 
+component_back = 10;
+
 corner_post_h = 22;
 dimmer_centers = [21.5, 47];
 relay_centers = [21, 28];
