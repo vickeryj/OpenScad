@@ -22,7 +22,7 @@ wire_d = 4;
 module base() {
 
     difference() {
-        plate(base_w, base_d, os_circle(r=1));
+        #plate(base_w, base_d, os_circle(r=1));
         plate_screws(base_w, base_d);
     }
                 
@@ -47,6 +47,7 @@ module base() {
                         post();
                 }
                 right(blackpill_posts[1] + blackpill_posts[2] + power_over) // right of blackpill
+                down(post_h/2) up(power_wall_height/2)
                 back(blackpill_posts[0])
                     slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);
             }
@@ -66,5 +67,5 @@ module cover_with_cutouts() {
 }
 
 base();
-xrot(180) right(base_w+20)
-cover_with_cutouts();
+//xrot(180) right(base_w+20)
+//cover_with_cutouts();
