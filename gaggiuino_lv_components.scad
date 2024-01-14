@@ -13,7 +13,7 @@ ads_over = 28;
 ads_fwd = 5;
 ads_post_over = 23.5;
 
-power_over = 10;
+power_over = 8;
 power_w = 20;
 
 corner_post_h = 16;
@@ -28,7 +28,7 @@ module base() {
     }
                 
                 
-    up(wall_thickness) fwd(base_d/2) left(base_w/2) {
+    up(wall_thickness-.01) fwd(base_d/2) left(base_w/2) {
         up(post_h/2)  {
             back(base_d) // back left
             right(component_padding_w) fwd(component_back) //inset
@@ -47,7 +47,7 @@ module base() {
                     right(blackpill_posts[right_i])
                         post();
                 }
-                right(blackpill_posts[2] + power_w/2 + power_over) // right of blackpill
+                right(blackpill_posts[2] + power_w/2 - wall_thickness*2 + power_over) // right of blackpill
                 down(post_h/2) up(power_wall_height/2)
                 back(blackpill_posts[0])
                     slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);
