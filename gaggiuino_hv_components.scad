@@ -29,7 +29,7 @@ ss_back = 6;
 module base() {
 
     difference() {
-        plate(base_w, base_d, os_circle(r=1), os_circle(r=0));
+        #plate(base_w, base_d, os_circle(r=1), os_circle(r=0));
         plate_screws(base_w, base_d);
     }
                 

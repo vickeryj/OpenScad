@@ -6,14 +6,14 @@ base_d = 75;
 
 
 max_post = [15.8, 8];
-blackpill_posts = [19, 7, 43.2];
+blackpill_posts = [19, 7, 50.2];
 
 ads_over = 28;
-ads_fwd = 7;
+ads_fwd = 5;
 ads_post_over = 23.5;
 
-power_over = 12;
-power_w = 18;
+power_over = 15;
+power_w = 20;
 
 corner_post_h = 16;
 
@@ -22,12 +22,12 @@ wire_d = 4;
 module base() {
 
     difference() {
-        #plate(base_w, base_d, os_circle(r=1));
+        plate(base_w, base_d, os_circle(r=1));
         plate_screws(base_w, base_d);
     }
                 
                 
-    up(wall_thickness/2) fwd(base_d/2) left(base_w/2) {
+    up(wall_thickness) fwd(base_d/2) left(base_w/2) {
         up(post_h/2)  {
             back(base_d) // back left
             right(component_padding_w) fwd(component_back) //inset
@@ -35,8 +35,8 @@ module base() {
                 post();
                 right(ads_over)
                 fwd(ads_fwd) {
-                    post();
-                    right(ads_post_over) post();
+                    post(screw_hole="M2,4");
+                    right(ads_post_over) post(screw_hole="M2,4");
                 }
             }
             
@@ -46,7 +46,7 @@ module base() {
                     right(blackpill_posts[right_i])
                         post();
                 }
-                right(blackpill_posts[1] + blackpill_posts[2] + power_over) // right of blackpill
+                right(blackpill_posts[2] + power_over) // right of blackpill
                 down(post_h/2) up(power_wall_height/2)
                 back(blackpill_posts[0])
                     slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);

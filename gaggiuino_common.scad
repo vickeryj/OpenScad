@@ -52,10 +52,10 @@ module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
 }
 
 
-module post(post_h = post_h) {
+module post(post_h = post_h, screw_hole = "M3,4") {
     difference() {
         cyl(d = post_d, h = post_h);
-        up(post_h/2-2) screw_hole("M3,4", thread = true);
+        up(post_h/2-2) screw_hole(screw_hole, thread = true);
     }
 }
 
@@ -72,7 +72,7 @@ module plate(w,d,bottom = os_circle(r=0), top = os_circle(r=0)) {
 module plate_screws(w,d) {
     for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
         for (j = [d/2-post_d/2, -d/2+post_d/2]) {
-            left(i) fwd(j) up(1.5) yrot(180) screw_hole("M3,4", thread = false, head = "button");
+            left(i) fwd(j) yrot(180) screw_hole("M3,4", thread = false);
         }
     }
 }
