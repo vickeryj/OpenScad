@@ -9,7 +9,6 @@ wall_thickness = 1.7;
 post_d = 6;
 post_h = 3;
 component_padding_w = 7;
-component_back = 10;
 power_wall_height = 6;
 
 power_d = 20;
@@ -52,10 +51,10 @@ module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
 }
 
 
-module post(post_h = post_h, screw_hole = "M3,4") {
+module post(post_h = post_h, screw_hole = "M3", screw_length = 4, slop = $slop) {
     difference() {
         cyl(d = post_d, h = post_h);
-        up(post_h/2-2) screw_hole(screw_hole, thread = true);
+        up((post_h - screw_length)/2) screw_hole(screw_hole, length=screw_length, thread = true, $slop=slop);
     }
 }
 
@@ -80,18 +79,36 @@ module plate_screws(w,d) {
 module cover_solid(w, d, corner_post_h) {
     plate(w, d, os_circle(r=0), os_circle(r=1));
     
-    down(corner_post_h/2) {
-        for(i = [d/2 - wall_thickness/2, -d/2+wall_thickness/2]) {
-            fwd(i) cuboid([w-post_d, wall_thickness, corner_post_h]);
-        }
-        for(i = [w/2-wall_thickness/2, -w/2+wall_thickness/2]) {
-            left(i) cuboid([wall_thickness, d-post_d, corner_post_h]);
+    module walls() {
+        down(corner_post_h/2) {
+            for(i = [d/2 - wall_thickness/2, -d/2+wall_thickness/2]) {
+                fwd(i) cuboid([w-post_d, wall_thickness, corner_post_h]);
+            }
+            for(i = [w/2-wall_thickness/2, -w/2+wall_thickness/2]) {
+                left(i) cuboid([wall_thickness, d-post_d, corner_post_h]);
+            }
         }
     }
     
-    for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
-        for (j = [d/2-post_d/2, -d/2+post_d/2]) {
-            down(corner_post_h/2) left(i) fwd(j) yrot(180) post(corner_post_h);
+    module corners(screw) {
+        for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
+            for (j = [d/2-post_d/2, -d/2+post_d/2]) {
+                down(corner_post_h/2) left(i) fwd(j) yrot(180) {
+                    if (screw) {
+                         post(corner_post_h+.02);
+                    }
+                    else {
+                        cyl(d = post_d, h = corner_post_h+.02);
+                    }
+                }
+            }
         }
     }
+
+    
+    difference() {
+        walls();
+        corners(false);
+    }
+    corners(true);
 }
