@@ -117,10 +117,10 @@ module back_right_slice() {
 }
 
 
-back_left_slice();
-front_left_slice();
-front_middle_slice();
-front_right_slice();
+//back_left_slice();
+//front_left_slice();
+//front_middle_slice();
+//front_right_slice();
 back_right_slice();
 
 

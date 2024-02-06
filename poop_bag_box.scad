@@ -35,7 +35,7 @@ module box_bottom(width, depth, height, wall_thickness) {
     }
 };
 
-color("red", .1) box_bottom(width, depth, height, wall_thickness);
+//color("red", .1) box_bottom(width, depth, height, wall_thickness);
 
 
 module box_side_cutouts(width, depth, height, wall_thickness) {
@@ -219,8 +219,8 @@ module top_with_hinge() {
     
 }
 
-//rotate([180, 0, 0])
-translate([0, 0, height+4])
+/*rotate([180, 0, 0])
+translate([0, 0, height+4])*/
 top_with_hinge();
 
 

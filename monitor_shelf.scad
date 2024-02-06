@@ -1,5 +1,7 @@
 $fn = 60;
 
+screw_diameter = 5;
+drill_diameter = 12;
 
 module shelf(wall_width, shelf_depth, shelf_height, shelf_width, gap) {
     module walls() {
@@ -10,10 +12,16 @@ module shelf(wall_width, shelf_depth, shelf_height, shelf_width, gap) {
     }
     difference() {
         walls();
-        translate([wall_width+15/2, 15, shelf_height+wall_width-.01]) 
-            keyhole();
-        translate([wall_width+15/2, shelf_depth - 15, shelf_height+wall_width-.01]) 
-            keyhole();
+        #translate([wall_width+15/2, 15, -.01]) {
+            cylinder(h=100, d = screw_diameter);
+            cylinder(h=10, d = drill_diameter);
+            //keyhole();
+        }
+        #translate([wall_width+15/2, shelf_depth - 15, -.01]) {
+            cylinder(h=100, d = screw_diameter);
+            cylinder(h=10, d = drill_diameter);
+            //keyhole();
+        }
     }
 }
 
@@ -159,7 +167,7 @@ difference() {
     shelves();
     translate([wall_width+side_gap, -1, wall_width]) mba();
 }
-//translate([wall_width+side_gap, -1, wall_width]) color("red", .1) mba();
+//ddjf675e1translate([wall_width+side_gap, -1, wall_width]) color("red", .1) mba();
 //translate([60, 0, 0]) guide_1(laptop_height_2+top_gap);
 //translate([60, -60, 0]) guide_2_1(laptop_height_2+top_gap);
 //translate([-60, 0, 0]) guide_2_2(laptop_height_2+top_gap);

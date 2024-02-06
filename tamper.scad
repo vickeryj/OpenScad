@@ -1,5 +1,5 @@
-//use </Users/vickeryj/Code/OpenSCAD/threads.scad> https://github.com/rcolyer/threads-scad
-// use </Users/vickeryj/Code/OpenSCAD/Chamfer.scad>  https://github.com/SebiTimeWaster/Chamfers-for-OpenSCAD
+use </Users/vickeryj/Code/OpenSCAD/threads.scad> //https://github.com/rcolyer/threads-scad
+use </Users/vickeryj/Code/OpenSCAD/Chamfer.scad>  //https://github.com/SebiTimeWaster/Chamfers-for-OpenSCAD
 
 $fn = 120;
 

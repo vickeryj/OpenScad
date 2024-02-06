@@ -20,9 +20,9 @@ module pot(base) {
 
 
 wall_width = 1.5;
-base = 40;
-top = 60;
-height = 15;
+base = 45;
+top = 80;
+height = 25;
 $fn=60;
 difference() {
     //pot(base);

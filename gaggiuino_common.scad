@@ -3,7 +3,7 @@ include <BOSL2/screws.scad>
 include <BOSL2/rounding.scad>
 
 //common
-$slop=0.11;
+$slop=0.05;
 $fn = 24;
 wall_thickness = 1.7;
 post_d = 6;

@@ -7,15 +7,15 @@
  */
 
 module spool() { 
-translate([0, 88, 115])
+translate([0, 95, 115])
 rotate([90, 0, 0])
 difference() {
-cylinder(h = 60, r = 99, center = false);
+cylinder(h = 70, r = 99, center = false);
 translate([0, 0, -.01])
-cylinder(h = 70, r = 27, center = false);
+cylinder(h = 70.02, r = 27, center = false);
 }
 }
-// spool();
+ //spool();
 
 /***** PARAMETERS *****/
 
@@ -23,7 +23,7 @@ material_thickness = 2;
 material_space = 0.35;
 material_eco = true;
 
-rod_length = 105;
+rod_length = 110;
 rod_radius = 9.2;
 
 pillar_height = 130;
@@ -43,6 +43,14 @@ module base_rods() {
     }
 }
 //base_rods();
+
+        intersection() {
+           print_all();
+           translate([pillar_height/2, 0, 0])
+           cube([pillar_height/2+2, base_height*2+4, base_height]);
+        }
+
+
 
 module pillars() {
     module unsliced() {
@@ -64,29 +72,59 @@ module pillars() {
                 cube([pillar_height/2, base_height*2+10, base_height]);
         }
     }
-    translate([0, pillar_height/2-10, 18])
-    rotate([180,0,0])
-    left();
+    
+    //unsliced();
+    
+    //translate([0, pillar_height/2-10, 18])
+    //rotate([180,0,0])
+    //left();
+    
+//    unsliced();
     
     //translate([-pillar_height/2, base_height*2+5, 0])
        // right();
+    //joiner();
 }
 
 cut_pillar_depth = 2*rod_radius+2*(material_thickness+material_space);
-cut_pillar_height = 2*rod_radius;
+cut_pillar_height = 2*rod_radius-.4;
 
 module joiner() {
-
-    cube([20,2, cut_pillar_height]);
-
+    translate([pillar_height/2-10, 2, 0])
+        cube([20,2, cut_pillar_height]);    
+        
+    translate([pillar_height/2-10, 2, cut_pillar_height])
+        cube([20,base_height+2, 2]);
+        
+    translate([pillar_height/2-10, 2+base_height-.01-.1, 0])
+        cube([20,2+.02, cut_pillar_height]);    
 
 }
 
+
 joiner();
 
-pillars();
+//pillars();
 
 
+translate([193, 10, 0])
+rotate([0, 0, 90])
+difference() {
+    translate([0, 60, 0]) pillars();
+    translate([-.01, -.01, -2]) cube([100, 90, 100]);
+
+}
+
+
+difference() {
+    translate([0, 57, 0]) pillars();
+    translate([-0.01,88,-2])
+        cube([100, 200, 100]);
+
+}
+
+
+//print_all();
 
 // print_base();
 // print_coupler();

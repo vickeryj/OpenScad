@@ -5,13 +5,14 @@ base_w = 90;
 base_d = 75;
 
 component_back = 10;
+componenet_offset = 3;
 
 max_post = [15.8, 8];
-blackpill_posts = [19, 7, 50.2];
+blackpill_posts = [19, 7, 50];
 
 ads_over = 28;
 ads_fwd = 5;
-ads_post_over = 23.5;
+ads_post_over = 21;
 
 power_over = 8;
 power_w = 20;
@@ -31,18 +32,18 @@ module base() {
     up(wall_thickness-.01) fwd(base_d/2) left(base_w/2) {
         up(post_h/2)  {
             back(base_d) // back left
-            right(component_padding_w) fwd(component_back) //inset
+            right(component_padding_w) fwd(component_back-componenet_offset) //inset
             right(max_post[0]) fwd(max_post[1]) { // max post 
                 post();
                 right(ads_over)
                 fwd(ads_fwd) {
                     for(i = [0, ads_post_over]) {
-                        right(i) post(screw_hole="M2", post_h=6, screw_length=6, slop=0.05);
+                        right(i) post(screw_hole="M2", post_h=6, screw_length=6);
                     }
                 }
             }
             
-            right(component_padding_w) back(component_back) { //inset
+            right(component_padding_w) back(component_back+componenet_offset) { //inset
                 for (right_i = [1,2]) {
                     back(blackpill_posts[0])
                     right(blackpill_posts[right_i])
@@ -96,5 +97,5 @@ module test_m2_posts() {
 
 
 base();
-xrot(180) right(base_w+20)
-cover_with_cutouts();
+//xrot(180) right(base_w+20)
+//cover_with_cutouts();
