@@ -29,7 +29,7 @@ wire_d = 4;
 module base() {
 
     difference() {
-        plate(base_w, base_d, os_circle(r=1));
+        bottom_plate(base_w, base_d, os_circle(r=1));
         plate_screws(base_w, base_d);
     }
                 
@@ -102,5 +102,5 @@ module test_m2_posts() {
 
 
 base();
-//xrot(180) right(base_w+20)
-//cover_with_cutouts();
+xrot(180) right(base_w+20)
+cover_with_cutouts();
