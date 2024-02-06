@@ -6,7 +6,7 @@ include <BOSL2/rounding.scad>
 $slop=0.05;
 $fn = 24;
 wall_thickness = 1.7;
-post_d = 6;
+post_d = 8;
 post_h = 3;
 component_padding_w = 7;
 power_wall_height = 6;
@@ -66,12 +66,17 @@ module plate(w,d,bottom = os_circle(r=0), top = os_circle(r=0)) {
                 steps=22,
                 bottom=bottom, 
                 top=top);
+    for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
+        for (j = [d/2-post_d/2, -d/2+post_d/2]) {
+            left(i) fwd(j) up(post_h) yrot(180) cyl(d = post_d, h = post_h);
+        }
+    }
 }
 
 module plate_screws(w,d) {
     for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
         for (j = [d/2-post_d/2, -d/2+post_d/2]) {
-            left(i) fwd(j) yrot(180) screw_hole("M3,4", thread = false);
+            left(i) fwd(j) yrot(180) screw_hole("M3", l = post_h, head = "button", thread = false, anchor=TOP);
         }
     }
 }

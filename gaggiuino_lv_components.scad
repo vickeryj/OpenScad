@@ -13,6 +13,7 @@ blackpill_posts = [19, 7, 50];
 ads_over = 28;
 ads_fwd = 5;
 ads_post_over = 21;
+ads_post_h = 6;
 
 power_over = 8;
 power_w = 20;
@@ -20,6 +21,10 @@ power_w = 20;
 corner_post_h = 22;
 
 wire_d = 4;
+
+
+
+
 
 module base() {
 
@@ -38,7 +43,7 @@ module base() {
                 right(ads_over)
                 fwd(ads_fwd) {
                     for(i = [0, ads_post_over]) {
-                        right(i) post(screw_hole="M2", post_h=6, screw_length=6);
+                        right(i) post(post_h=ads_post_h, screw_length=ads_post_h);
                     }
                 }
             }
