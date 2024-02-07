@@ -23,8 +23,9 @@ corner_post_h = 22;
 wire_d = 4;
 
 
-
-
+strain_thickness = wall_thickness;
+strain_width = wire_d * 2;
+strain_height = 10;
 
 module base() {
 
@@ -60,8 +61,22 @@ module base() {
                     slide(power_wall_height, power_w, power_d, power_top_rail_center, power_bottom_lift);
             }
         }
+        
+       right(strain_thickness/2) back(post_d + strain_width/2) strain_relief();
+
     }
 }
+
+module strain_relief() {
+    difference() {
+        cuboid([strain_thickness, strain_width, strain_height], anchor=BOTTOM);
+        up(wire_d/2){
+            cuboid([strain_thickness+0.01, wire_d, strain_height+0.01], anchor=BOTTOM);
+            yrot(90) cyl(h = wall_thickness+.02, d = wire_d);
+        }
+    }
+}
+
 
 module cover_with_cutouts() {
     difference() {
@@ -86,21 +101,7 @@ module cover_with_cutouts() {
     }
 }
 
-module test_m2_posts() {
-    post_height = 6; 
-    slops = [0, .05, $slop];
-    for (slop_idx = [0:2]) {
-        right(10*slop_idx) post(screw_hole="M2", screw_length = post_height, post_h=post_height, slop=slops[slop_idx]);
-        down(post_height/2) fwd(6) right(slop_idx*10-3.4) text3d(format_float(slops[slop_idx]), size = 3);
-        fwd(10) right(10*slop_idx) post(screw_hole="M3", screw_length = post_height, post_h=post_height, slop=slops[slop_idx]);
-    }
-    wall_thickness = 1;
-    right(10) fwd(5) down(post_height/2+wall_thickness/2-.01) cuboid([30,20,wall_thickness]);
-}
+//base();
+//xrot(180) right(base_w+20) cover_with_cutouts();
 
-//test_m2_posts();
-
-
-base();
-xrot(180) right(base_w+20)
-cover_with_cutouts();
+up(corner_post_h+wall_thickness) cover_with_cutouts();

@@ -104,10 +104,10 @@ module cover_solid(w, d, corner_post_h) {
             for (j = [d/2-post_d/2, -d/2+post_d/2]) {
                 down(corner_post_h/2) left(i) fwd(j) yrot(180) {
                     if (screw) {
-                         post(corner_post_h+.02);
+                        down(post_h/2) post(corner_post_h-post_h);
                     }
                     else {
-                        cyl(d = post_d, h = corner_post_h+.02);
+                        cyl(d = post_d, h = corner_post_h+.01);
                     }
                 }
             }
