@@ -20,10 +20,10 @@ power_w = 20;
 
 corner_post_h = 22;
 
-wire_d = 4;
+wire_d = 5;
 
 
-strain_thickness = wall_thickness;
+strain_thickness = wall_thickness*1.5;
 strain_width = wire_d * 2;
 strain_height = 7;
 
@@ -66,7 +66,7 @@ module base() {
 
     }
     for (i = [0, 1, 2]) {
-        back(base_d/2-wall_thickness/2) right(base_w/3-base_w/3*i) up(wall_thickness) zrot(90) { 
+        back(base_d/2-strain_thickness/2) right(base_w/3-base_w/3*i) up(wall_thickness-.01) zrot(90) { 
             strain_relief();
         }
     }
@@ -77,7 +77,7 @@ module strain_relief() {
         cuboid([strain_thickness, strain_width, strain_height], anchor=BOTTOM);
         up(wire_d/2){
             cuboid([strain_thickness+0.01, wire_d, strain_height+0.01], anchor=BOTTOM);
-            yrot(90) cyl(h = wall_thickness+.02, d = wire_d);
+            yrot(90) cyl(h = strain_thickness+.02, d = wire_d);
         }
     }
     
@@ -98,13 +98,13 @@ module cover_with_cutouts() {
         
         thermo_w = 13;
         thermo_back_c = 16;
-        screen_front_c = 12;
+        screen_front_c = 13;
         thermo_h = 15;
-        thermo_screw_back = 15;
+        thermo_screw_back = 8;
         left(base_w/2-wall_thickness/2) {
             back(base_d/2-thermo_back_c) {
                 down(thermo_h/2+wall_thickness) cuboid([wall_thickness+.01, thermo_w, thermo_h]);
-                up(wall_thickness/2) right(thermo_screw_back) xrot(90) cuboid([thermo_h, wall_thickness+.01, thermo_w]);
+                up(wall_thickness/2) right(thermo_w/ 2+ thermo_screw_back) xrot(90) cuboid([thermo_h, wall_thickness+.01, thermo_w]);
             }
             down(corner_post_h+.01) fwd(base_d/2 - screen_front_c) {
                 up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
