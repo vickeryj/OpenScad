@@ -65,6 +65,11 @@ module base() {
        right(strain_thickness/2) back(post_d + strain_width/2) strain_relief();
 
     }
+    for (i = [0, 1, 2]) {
+        back(base_d/2-wall_thickness/2) right(base_w/3-base_w/3*i) up(wall_thickness) zrot(90) { 
+            strain_relief();
+        }
+    }
 }
 
 module strain_relief() {
@@ -75,25 +80,34 @@ module strain_relief() {
             yrot(90) cyl(h = wall_thickness+.02, d = wire_d);
         }
     }
+    
+    
 }
 
 
 module cover_with_cutouts() {
     difference() {
         cover_solid(base_w, base_d, corner_post_h);
+
         for (i = [0, 1, 2]) {
-            back(base_d/2-wall_thickness/2) down(corner_post_h/3) right(base_w/3-base_w/3*i) xrot(90) { 
-                cyl(h = wall_thickness+.02, d = wire_d);
-                fwd(wire_d*4/2) cuboid([wire_d, wire_d*4, wall_thickness+02]);
+            back(base_d/2-wall_thickness/2) right(base_w/3-base_w/3*i) down(corner_post_h) zrot(90) { 
+                cuboid([wall_thickness+.01, strain_width+$slop*2, strain_height+$slop], anchor=BOTTOM);
+                up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
             }
         }
+        
         thermo_w = 13;
-        thermo_back_c = 17;
+        thermo_back_c = 16;
         screen_front_c = 12;
+        thermo_h = 15;
+        thermo_screw_back = 15;
         left(base_w/2-wall_thickness/2) {
-            back(base_d/2-thermo_back_c) down(corner_post_h/2 + wall_thickness/2) 
-                cuboid([wall_thickness+.01, thermo_w, corner_post_h - wall_thickness +.01]);
+            back(base_d/2-thermo_back_c) {
+                down(thermo_h/2+wall_thickness) cuboid([wall_thickness+.01, thermo_w, thermo_h]);
+                up(wall_thickness/2) right(thermo_screw_back) xrot(90) cuboid([thermo_h, wall_thickness+.01, thermo_w]);
+            }
             down(corner_post_h+.01) fwd(base_d/2 - screen_front_c) {
+                up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
                 cuboid([wall_thickness+.01, strain_width+$slop*2, strain_height+$slop], anchor=BOTTOM);
             }
         }
@@ -101,6 +115,6 @@ module cover_with_cutouts() {
 }
 
 base();
-//xrot(180) right(base_w+20) cover_with_cutouts();
+xrot(180) right(base_w+20) cover_with_cutouts();
 
-up(corner_post_h+wall_thickness) cover_with_cutouts();
+//up(corner_post_h+wall_thickness) cover_with_cutouts();

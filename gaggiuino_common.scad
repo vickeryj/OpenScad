@@ -80,7 +80,7 @@ module plate(w,d,bottom = os_circle(r=0), top = os_circle(r=0)) {
 module plate_screws(w,d) {
     for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
         for (j = [d/2-post_d/2, -d/2+post_d/2]) {
-            left(i) fwd(j) yrot(180) screw_hole("M3", l = post_h, head = "button", thread = false, anchor=TOP);
+            left(i) fwd(j) yrot(180) screw_hole("M3", l = post_h+0.1, head = "button", thread = false, anchor=TOP);
         }
     }
 }
