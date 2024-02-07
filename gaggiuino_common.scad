@@ -62,7 +62,7 @@ module bottom_plate(w,d,bottom = os_circle(r=0), top = os_circle(r=0)) {
     plate(w,d,bottom, top);
     for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
         for (j = [d/2-post_d/2, -d/2+post_d/2]) {
-            left(i) fwd(j) up(post_h) yrot(180) cyl(d = post_d, h = post_h);
+            left(i) fwd(j) up(wall_thickness+post_h/2) yrot(180) cyl(d = post_d, h = post_h);
         }
     }
 }
