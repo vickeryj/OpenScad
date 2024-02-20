@@ -2,7 +2,6 @@ include <BOSL2/std.scad>
 include <BOSL2/screws.scad>
 include <BOSL2/rounding.scad>
 
-//common
 $slop=0.05;
 $fn = 24;
 wall_thickness = 1.7;
@@ -14,6 +13,11 @@ power_wall_height = 6;
 power_d = 20;
 power_top_rail_center = 4;
 power_bottom_lift = .7;
+
+wire_d = 5;
+strain_thickness = wall_thickness*1.5;
+strain_width = wire_d * 2;
+strain_height = 7;
 
 
 module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
@@ -50,6 +54,20 @@ module slide(wall_height, width, depth, top_rail_center=5, bottom_rail_lift=0) {
     }
 }
 
+module strain_relief() {
+    difference() {
+        cuboid([strain_thickness, strain_width, strain_height], anchor=BOTTOM);
+        up(wire_d/2){
+            cuboid([strain_thickness+0.01, wire_d, strain_height+0.01], anchor=BOTTOM);
+            yrot(90) cyl(h = strain_thickness+.02, d = wire_d);
+        }
+    }
+}
+
+module strain_relief_cutout() {
+    cuboid([wall_thickness+.01, strain_width+$slop*2, strain_height+$slop], anchor=BOTTOM);
+    up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
+}
 
 module post(post_h = post_h, screw_hole = "M3", screw_length = 4, slop = $slop) {
     difference() {

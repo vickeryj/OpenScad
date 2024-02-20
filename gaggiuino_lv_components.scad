@@ -19,14 +19,7 @@ power_over = 8;
 power_w = 20;
 
 corner_post_h = 22;
-
-wire_d = 5;
-
-
-strain_thickness = wall_thickness*1.5;
-strain_width = wire_d * 2;
-strain_height = 7;
-
+//
 module base() {
 
     difference() {
@@ -72,27 +65,13 @@ module base() {
     }
 }
 
-module strain_relief() {
-    difference() {
-        cuboid([strain_thickness, strain_width, strain_height], anchor=BOTTOM);
-        up(wire_d/2){
-            cuboid([strain_thickness+0.01, wire_d, strain_height+0.01], anchor=BOTTOM);
-            yrot(90) cyl(h = strain_thickness+.02, d = wire_d);
-        }
-    }
-    
-    
-}
-
-
 module cover_with_cutouts() {
     difference() {
         cover_solid(base_w, base_d, corner_post_h);
 
         for (i = [0, 1, 2]) {
             back(base_d/2-wall_thickness/2) right(base_w/3-base_w/3*i) down(corner_post_h) zrot(90) { 
-                cuboid([wall_thickness+.01, strain_width+$slop*2, strain_height+$slop], anchor=BOTTOM);
-                up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
+                strain_relief_cutout();
             }
         }
         
@@ -107,8 +86,7 @@ module cover_with_cutouts() {
                 up(wall_thickness/2) right(thermo_w/ 2+ thermo_screw_back) xrot(90) cuboid([thermo_h, wall_thickness+.01, thermo_w]);
             }
             down(corner_post_h+.01) fwd(base_d/2 - screen_front_c) {
-                up(strain_height) yrot(90) cyl(d=wire_d, h = wall_thickness+.01);
-                cuboid([wall_thickness+.01, strain_width+$slop*2, strain_height+$slop], anchor=BOTTOM);
+                strain_relief_cutout();
             }
         }
     }
