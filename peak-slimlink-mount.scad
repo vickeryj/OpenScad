@@ -11,6 +11,7 @@ include <BOSL2/rounding.scad>
 include <BOSL2/screws.scad>
 
 $fn = 24;
+$slop=0.08;
 
 module plate() {
     difference() {
