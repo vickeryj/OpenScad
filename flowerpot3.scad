@@ -3,7 +3,7 @@ include <BOSL2/std.scad>
 $fn = 120;
 
 height = 154;
-base_d =143;
+base_d =135;
 top_d =181.5;
 wall_thickness = 2.5;
 hole_d = 6;
