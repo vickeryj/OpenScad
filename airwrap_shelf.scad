@@ -50,6 +50,42 @@ module shelf_with_pegs_and_holes() {
 }
 //shelf_with_pegs_and_holes();
 
+module wire_hook() {
+
+    hook_width = 30;
+
+    hook_path = turtle([
+        "arcright", wand_r+wall_width, 180, //bottom hook bottom
+        "move", shelf_space, //back wall
+        "arcright", wall_width/2, 180, //flip around
+        "move", shelf_space/2, //move to top hook
+        "arcleft", wand_r, 180, //top hook top 
+        "arcright", wall_width/2, 180, //flip around
+        "arcright", wand_r+wall_width, 150, //top hook bottom
+        "left", 150, "move",35,
+        "arcleft", wand_r, 179, //bottom hook top
+        "arcright", wall_width/2, 190, //flip around
+
+    ]);
+    
+    //stroke(hook_path);
+    
+    module hook() {
+        offset_sweep(hook_path, 
+            height = hook_width,
+            bottom=os_circle(r=1.2),
+            top=os_circle(r=1.2)
+            );
+    }
+    difference() {
+        hook();
+        for (i = [shelf_space/8, shelf_space/8*6]) {
+            fwd(wand_r*2+wall_width-0.01) left(i) up(hook_width/2) xrot(270) #screw_hole("#6,1/2",head="flat", anchor=TOP);
+        }
+    }
+}
+
+wire_hook();
 
 module test_hook() {
     shelf_path = turtle([
@@ -85,7 +121,7 @@ module peg_shelf() {
         right(attach_d*i) peg();
     }
 }
-peg_shelf();
+//peg_shelf();
 
 
 //Not used anymore, original pegs were too small
