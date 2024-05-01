@@ -1,6 +1,7 @@
 $fn = 60;
 
-height = 39;
+//height = 39; // clear monitor foot (could be shorter)
+height = 10; // stubby for on top of thunderbolt port
 width = 90;
 center_depth = 80;
 center_width = 96;
