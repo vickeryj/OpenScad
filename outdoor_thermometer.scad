@@ -6,32 +6,31 @@ base_d = 100;
 oval_scale = 1.2;
 wall_w = 1.5;
 
+post_back = 9.5;
+post_fwd = 22;
+post_over = 40;
 
-module posts(post_height, screw_hole_d = 2.5, just_holes = false, inserts = false, post_d = 6) {
+post_locations = [
+        [-base_d/2+post_back,-1.5],  
+        [base_d/2-post_fwd-1.5, post_over-1.3],
+        [base_d/2-post_fwd, -post_over+.5]];
 
-    screw_post_d = post_d;
-    post_back = 9.5;
-    post_fwd = 22;
-    post_over = 40;
 
-    for (coords = [
-            [-base_d/2+post_back,-1.5],  
-            [base_d/2-post_fwd-1.5, post_over-1.3],
-            [base_d/2-post_fwd, -post_over+.5]]) 
-    {
-        back(coords[0]) right(coords[1]) {
-            if (just_holes) {
-                down(0.01) cyl(d=screw_hole_d, h=post_height, anchor=BOTTOM);
-            } else {
-                difference() {
-                    cyl(d=screw_post_d, h=post_height, anchor=BOTTOM, rounding1=-1);
-                    up(0.01) cyl(d=screw_hole_d, h=post_height, anchor=BOTTOM);
-                    if(inserts) {
-                        up (post_height-4.49) m3_insert();
-                    }
-                }
-            }
-        }
+module posts(post_height, post_d, foot_rounding = -1) {
+    for (coords = post_locations) {
+        back(coords[0]) right(coords[1]) cyl(d=post_d, h=post_height, anchor=BOTTOM, rounding1=foot_rounding);
+    }
+}
+
+module post_holes(hole_d=2.5, post_height) {
+    for (coords = post_locations) {
+        back(coords[0]) right(coords[1]) down(0.01) cyl(d=hole_d, h=post_height+.02, anchor=BOTTOM);
+    }
+}
+
+module insert_holes() {
+    for (coords = post_locations) {
+        back(coords[0]) right(coords[1]) up (post_height-4.49) m3_insert();
     }
 }
 
@@ -69,22 +68,8 @@ module base() {
         up(base_h-post_h) posts(post_h, screw_hole_d, true);
         up(base_h-govee_s[2]+.01) cuboid(govee_s, anchor=BOTTOM, rounding = -1, edges=[TOP+FRONT,TOP+RIGHT, TOP+LEFT, TOP+BACK]);
     }
-
-
-    
-
-
-    
    
 }
-
-//base();
-
-//up(10) yrot(180) right(160) base();
-
-
-
-
 
 module top() {
 
@@ -105,13 +90,11 @@ module top() {
 
     }
 
-    up(wall_w-.01) posts(post_height);
+    up(wall_w-.01) posts(post_height=post_height, foot_rounding=0);
 
 }
 
-right(200) top();
-
-module middle(post_d = 6, inserts = false) {
+module middle(post_d = 6, inserts = false, solid = false) {
     top_d = 130;
     height = 18;
 
@@ -120,33 +103,57 @@ module middle(post_d = 6, inserts = false) {
     post_fwd = 22;
     post_over = 40;
     screw_hole_d = 2.5;
-    post_height = height;
+    post_height = height-wall_w;
 
-    module platform() {
+    module outer_louver() {
         difference() {
-            xscale(oval_scale) cyl(d1=base_d, d2=top_d, h=height, anchor=BOTTOM, rounding1=2);
-            up(wall_w) xscale(oval_scale) cyl(d1=base_d-wall_w, d2=top_d-wall_w, h = height, anchor=BOTTOM, rounding1=2, rounding2=-2);
+            xscale(oval_scale) cyl(d1=base_d, d2=top_d, h=height, anchor=BOTTOM);
+            up(wall_w) xscale(oval_scale) cyl(d1=base_d-wall_w, d2=top_d-wall_w, h = height, anchor=BOTTOM);
+            if (!solid) {
+                down(0.01) xscale(oval_scale) cyl(d=base_d-hole_inset, h=wall_w+.02, anchor=BOTTOM);
+            }
         }
-        up(wall_w-.01) posts(post_height, post_d=post_d, inserts = inserts);
-    }
         
-    hole_inset = 30;
-    difference() {
-        platform();
-        down(height-post_height) posts(post_height, just_holes=true);
-        down(0.01) xscale(oval_scale) cyl(d=base_d-hole_inset, h=height, anchor=BOTTOM);
     }
+    
+    module inner_louver() {
+        inner_d_start = base_d - wall_w;
+        inner_d_end = inner_d_start-28;
+        inner_h = height-wall_w;
+        up(wall_w) {
+            difference() {
+                xscale(oval_scale) cyl(d1=inner_d_start, d2=inner_d_end, h=inner_h, anchor=BOTTOM);
+                down(.01) xscale(oval_scale) cyl(d1=inner_d_start-wall_w, d2=inner_d_end-wall_w, h = inner_h+.02, anchor=BOTTOM);
+            }
 
+        }
+    }
+    
+    module posted_louvers() {
+        outer_louver();
+        inner_louver();
+        posts(post_height=post_height, post_d=post_d, foot_rounding=0);
+    }
+    hole_inset = 6;
+    difference() {
+        posted_louvers();
+        down(height-post_height-wall_w) post_holes(post_height = post_height);
+    }
 }
-
-middle(post_d = 9, inserts = true);
-
-insert_height = 4;
  
 module m3_insert() {
-    up(1.3) cyl(d2=5.59, d1=5.16, h=insert_height-.8, chamfer2=-.3, anchor=BOTTOM); //d2 and d1 are a bit too larg on the trident
+    insert_height = 4;
+    up(1.3) cyl(d2=5.53, d1=5.16, h=insert_height-.8, chamfer2=-.3, anchor=BOTTOM);
     up(.51) cyl(d=4.3, h=.8, anchor=BOTTOM);
     cyl(d=0.8, h=.5, anchor=BOTTOM);
 }
 
 //m3_insert();
+//right(200) top();
+//up(10) yrot(180) right(160) base();
+
+//middle(post_d = 9, inserts = true);
+//right(200) 
+//middle(solid=true);
+middle(solid=true);
+right(200) middle();
