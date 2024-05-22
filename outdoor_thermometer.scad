@@ -28,7 +28,7 @@ module post_holes(hole_d=2.5, post_height) {
     }
 }
 
-module insert_holes() {
+module insert_holes(post_height) {
     for (coords = post_locations) {
         back(coords[0]) right(coords[1]) up (post_height-4.49) m3_insert();
     }
@@ -50,7 +50,7 @@ module base() {
     module platform() {
         difference() {
             xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM, rounding2=2);
-            down(wall_w) xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h-wall_w, anchor=BOTTOM);
+            down(0) xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h-wall_w, anchor=BOTTOM);
         }
         //down(platform_lift) cuboid([govee_s[0]+wall_w*2, govee_s[1]+wall_w*2, base_h+platform_lift], anchor=BOTTOM);
         down(wall_w) back(govee_s[1]/2+wall_w) xrot(90) //yrot(270) //xrot(90) 
@@ -59,15 +59,16 @@ module base() {
                 size2=[base_x, top_y], h=h, 
                 shift=[0,(base_y-top_y)/2], anchor=BOTTOM);
     }
-    
 
-    screw_hole_d = 3.2;
+    platform();
 
-    difference() {
-        platform();
-        up(base_h-post_h) posts(post_h, screw_hole_d, true);
-        up(base_h-govee_s[2]+.01) cuboid(govee_s, anchor=BOTTOM, rounding = -1, edges=[TOP+FRONT,TOP+RIGHT, TOP+LEFT, TOP+BACK]);
-    }
+//    screw_hole_d = 3.2;
+//
+//    difference() {
+//        platform();
+//        up(base_h-post_h) posts(post_h, screw_hole_d, true);
+//        up(base_h-govee_s[2]+.01) cuboid(govee_s, anchor=BOTTOM, rounding = -1, edges=[TOP+FRONT,TOP+RIGHT, TOP+LEFT, TOP+BACK]);
+//    }
    
 }
 
@@ -132,7 +133,12 @@ module middle(post_d = 6, inserts = false, solid = false) {
     module posted_louvers() {
         outer_louver();
         inner_louver();
-        posts(post_height=post_height, post_d=post_d, foot_rounding=0);
+        difference() {
+            posts(post_height=post_height, post_d=post_d, foot_rounding=0);
+            if(inserts) {
+                insert_holes(post_height);
+            }
+        }
     }
     hole_inset = 6;
     difference() {
@@ -155,5 +161,7 @@ module m3_insert() {
 //middle(post_d = 9, inserts = true);
 //right(200) 
 //middle(solid=true);
-middle(solid=true);
-right(200) middle();
+//middle(solid=true);
+middle();
+//base();
+right(200) yrot(180) middle(post_d=8, inserts=true);
