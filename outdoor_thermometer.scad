@@ -10,13 +10,15 @@ post_back = 9.5;
 post_fwd = 22;
 post_over = 40;
 
+
+
 post_locations = [
         [-base_d/2+post_back,-1.5],  
         [base_d/2-post_fwd-1.5, post_over-1.3],
         [base_d/2-post_fwd, -post_over+.5]];
 
 
-module posts(post_height, post_d, foot_rounding = -1) {
+module posts(post_height, post_d = 6, foot_rounding = -1) {
     for (coords = post_locations) {
         back(coords[0]) right(coords[1]) cyl(d=post_d, h=post_height, anchor=BOTTOM, rounding1=foot_rounding);
     }
@@ -35,41 +37,83 @@ module insert_holes(post_height) {
 }
 
 module base() {
-    flange_d = 120;
-    base_h = 10;
-    post_h = 5;
-    govee_s = [60, 22, 5];
-    platform_lift = 10;
 
-    //cuboid base values
-    base_y = base_h+platform_lift; //translates to base_height
-    base_x = govee_s[0]+wall_w*2; // translate to base start
-    h = govee_s[1]+wall_w*2;
-    top_y = base_h;
+    flange_d = 120;
+    base_h = 8;
+    post_h = 5;
+    platform_lift = 12;
     
-    module platform() {
+    module outer_louver() {
         difference() {
-            xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM, rounding2=2);
-            down(0) xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h-wall_w, anchor=BOTTOM);
+            xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM);
+            down(wall_w) xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM);
+            up(base_h-wall_w*2+.01) xscale(oval_scale) cyl(d = base_d-6, h = wall_w*2, anchor=BOTTOM);
         }
-        //down(platform_lift) cuboid([govee_s[0]+wall_w*2, govee_s[1]+wall_w*2, base_h+platform_lift], anchor=BOTTOM);
-        down(wall_w) back(govee_s[1]/2+wall_w) xrot(90) //yrot(270) //xrot(90) 
+    }
+
+    inner_d_start = base_d - wall_w;
+    inner_d_end = inner_d_start-28;
+    inner_h = base_h-wall_w;
+    
+    module inner_louvers() {
+        up(wall_w) {
+            difference() {
+                xscale(oval_scale) cyl(d2=inner_d_start, d1=inner_d_end, h=inner_h, anchor=BOTTOM);
+                down(.01) xscale(oval_scale) cyl(d2=inner_d_start-wall_w, d1=inner_d_end-wall_w, h = inner_h+.02, anchor=BOTTOM);
+            }
+        }
+    }
+    
+    module inner_louver_clip() {
+        difference() {
+            xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM); 
+            up(wall_w+.01) xscale(oval_scale) cyl(d2=inner_d_start, d1=inner_d_end, h=inner_h, anchor=BOTTOM);                
+        }
+    }
+    
+    govee_s = [60, 22, base_h-1];
+    
+    module foot() {
+        base_y = base_h+platform_lift; //translates to base_height
+        base_x = govee_s[0]+wall_w*2; // translate to base start
+        h = govee_s[1]+wall_w*2;
+        top_y = base_h+2;
+        down((base_y/2)-base_h) back(govee_s[1]/2+wall_w) xrot(90)
            prismoid(
                 size1=[base_x, base_y], 
                 size2=[base_x, top_y], h=h, 
                 shift=[0,(base_y-top_y)/2], anchor=BOTTOM);
     }
-
-    platform();
-
-//    screw_hole_d = 3.2;
-//
-//    difference() {
-//        platform();
-//        up(base_h-post_h) posts(post_h, screw_hole_d, true);
-//        up(base_h-govee_s[2]+.01) cuboid(govee_s, anchor=BOTTOM, rounding = -1, edges=[TOP+FRONT,TOP+RIGHT, TOP+LEFT, TOP+BACK]);
-//    }
-   
+    
+    module foot_support() {
+        support_h = wall_w*2;
+        up(wall_w) {
+            cuboid([20,100,support_h], anchor=BOTTOM);
+            cuboid([120,20,support_h], anchor=BOTTOM);
+        }
+    }
+    
+    module all_the_parts() {
+        outer_louver();
+        bottom_post_lift = 4;
+        up(bottom_post_lift) posts(post_height=base_h-bottom_post_lift, foot_rounding=0);
+        inner_louvers();
+        foot();
+        difference() {
+            foot_support();
+            inner_louver_clip();
+        }
+    }
+    
+    module all_the_parts_with_holes() {
+        screw_hole_d = 3.2;
+        difference() {    
+            all_the_parts();
+            post_holes(hole_d=screw_hole_d, post_height = base_h+.02);
+            up(base_h-govee_s[2]+.01) cuboid(govee_s, anchor=BOTTOM, rounding = -1, edges=[TOP+FRONT,TOP+RIGHT, TOP+LEFT, TOP+BACK]);
+        }
+    }
+    all_the_parts_with_holes();
 }
 
 module top() {
@@ -162,6 +206,6 @@ module m3_insert() {
 //right(200) 
 //middle(solid=true);
 //middle(solid=true);
-middle();
-//base();
-right(200) yrot(180) middle(post_d=8, inserts=true);
+//middle();
+yrot(180) base();
+right(200) middle(post_d=8, inserts=true);
