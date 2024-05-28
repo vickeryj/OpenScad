@@ -38,7 +38,7 @@ module insert_holes(post_height) {
 
 module base() {
 
-    flange_d = 120;
+    flange_d = 110;
     base_h = 8;
     post_h = 5;
     platform_lift = 12;
@@ -47,12 +47,12 @@ module base() {
         difference() {
             xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM);
             down(wall_w) xscale(oval_scale) cyl(d1 = flange_d, d2 = base_d, h = base_h, anchor=BOTTOM);
-            up(base_h-wall_w*2+.01) xscale(oval_scale) cyl(d = base_d-6, h = wall_w*2, anchor=BOTTOM);
+            up(base_h-wall_w*2+.01) xscale(oval_scale) cyl(d = base_d-18, h = wall_w*2, anchor=BOTTOM);
         }
     }
 
-    inner_d_start = base_d - wall_w;
-    inner_d_end = inner_d_start-28;
+    inner_d_start = base_d - wall_w-15;
+    inner_d_end = inner_d_start-12;
     inner_h = base_h-wall_w;
     
     module inner_louvers() {
@@ -208,4 +208,4 @@ module m3_insert() {
 //middle(solid=true);
 //middle();
 yrot(180) base();
-right(200) middle(post_d=8, inserts=true);
+//right(200) middle(post_d=8, inserts=true);
