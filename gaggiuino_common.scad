@@ -76,11 +76,11 @@ module post(post_h = post_h, screw_hole = "M3", screw_length = 4, slop = $slop) 
     }
 }
 
-module posts(centers) {
+module posts(centers, screw_hole = "M3") {
     for(i = [0, centers[0]]) {
         right(i) post();
         for(j = [0, centers[1]]) {
-            right(i) back(j) post();
+            right(i) back(j) post(screw_hole = screw_hole);
         }
     }
 }

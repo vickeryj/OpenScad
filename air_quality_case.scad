@@ -45,7 +45,7 @@ module base() {
         left(pi_centers[0]/2)
         fwd(base_d/2)
         back(pm_depth+mhz_depth+pi_centers[1]+5)
-        posts(pi_centers);
+        posts(pi_centers, screw_hole = "M2");
     
 }
 
