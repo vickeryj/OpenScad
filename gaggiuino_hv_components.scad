@@ -72,15 +72,6 @@ module base() {
 
 }
 
-module posts(centers) {
-    for(i = [0, centers[0]]) {
-        right(i) post();
-        for(j = [0, centers[1]]) {
-            right(i) back(j) post();
-        }
-    }
-}
-
 module stepdown_slot() {
     cuboid([ss_slot_length, wall_thickness, ss_slot_height]);
     back(ss_slot_width) cuboid([ss_slot_length, wall_thickness, ss_slot_height]);

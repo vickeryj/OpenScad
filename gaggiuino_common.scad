@@ -76,6 +76,15 @@ module post(post_h = post_h, screw_hole = "M3", screw_length = 4, slop = $slop) 
     }
 }
 
+module posts(centers) {
+    for(i = [0, centers[0]]) {
+        right(i) post();
+        for(j = [0, centers[1]]) {
+            right(i) back(j) post();
+        }
+    }
+}
+
 module bottom_plate(w,d,bottom = os_circle(r=0), top = os_circle(r=0)) {
     plate(w,d,bottom, top);
     for (i = [w/2 - post_d/2, -w/2 + post_d/2]) {
