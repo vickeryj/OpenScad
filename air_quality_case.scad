@@ -60,14 +60,76 @@ module mhz_slot() {
     right(mhz_width + slot_thickness) cuboid([slot_thickness, slot_depth, mhz_slot_height]);
 }
 
-
-module top() {
-    
-    difference() {
-        cover_solid(base_w, base_d, corner_post_h);
+module air_holes() {
+    hole_width = base_w/2;
+    hole_height = 2;
+    margin = 3*wall_thickness;
+    for (y = [margin:hole_height*2:corner_post_h]) {
+        up(y)
+            cuboid([hole_width, wall_thickness+0.02, hole_height]);
     }
 }
 
-base();
+screen_w = 26;
+screen_d = 15;
+module screen_hole() {
+    cuboid([screen_w, screen_d, wall_thickness+0.02]);
+}
 
-//right(base_w + 10) up(corner_post_h) top();
+
+module top() {
+    
+    screen_hole_back = 30;
+    screen_hole_l = 22;
+    
+    difference() {
+        cover_solid(base_w, base_d, corner_post_h);
+        down(corner_post_h) {
+            fwd(base_d/2-wall_thickness/2) air_holes();
+            back(base_d/2-wall_thickness/2) air_holes(); 
+        }
+        fwd(base_d/2-screen_hole_back) left(base_w/2-screen_hole_l) up(wall_thickness/2)
+            screen_hole();
+            
+            
+        plug_w = 12;
+        plug_h = 6.5;
+        right(base_w/2-wall_thickness/2) back(base_d/2) down(corner_post_h)
+            fwd(25) up(7)
+            #cuboid([wall_thickness+.02, plug_w, plug_h]);
+    }
+    screen_spacer_h = 1.5;
+    screen_spacer_d = 3.5;
+    screen_spacer_center = 24;
+    spacer_offset = 4.5/2;
+    
+    down(screen_spacer_h/2-.01)
+    fwd(base_d/2-screen_hole_back+spacer_offset) left(base_w/2-screen_hole_l) {
+        for (x = [1, -1]) {
+            for (y = [1,-1]) {
+                left(x*(screen_spacer_center/2))
+                fwd(y*(screen_spacer_center/2)) {
+                    #cyl(d=screen_spacer_d, h=screen_spacer_h);
+                    down(screen_spacer_h-.01) cyl(d=1.8, h = 2);
+                }
+            }
+        }
+    }
+    
+}
+
+module test_clip() {
+    xrot(180) intersection() {
+        top();
+        fwd(38) left(8) cuboid(35);
+    }
+}
+
+//test_clip();
+
+
+//base();
+
+//right(base_w + 10) up(corner_post_h) 
+top();
+
