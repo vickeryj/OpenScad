@@ -95,7 +95,7 @@ module top() {
         plug_w = 12;
         plug_h = 6.5;
         right(base_w/2-wall_thickness/2) back(base_d/2) down(corner_post_h)
-            fwd(25) up(7)
+            fwd(25) up(8.5)
             #cuboid([wall_thickness+.02, plug_w, plug_h]);
     }
     screen_spacer_h = 1.5;
@@ -131,5 +131,5 @@ module test_clip() {
 //base();
 
 //right(base_w + 10) up(corner_post_h) 
-top();
+xrot(180) top();
 
