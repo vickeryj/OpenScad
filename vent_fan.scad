@@ -13,6 +13,8 @@ height = 180;
 fan_width = 139;
 fan_depth = 25;
 fan_diam = 135;
+fan_padding = 20;
+
 
 screw_diam = 4.5;
 screw_inset = 7;
@@ -24,6 +26,10 @@ dovetail_depth = dovetail_width/2;
 dovetail_taper = -.6;
 dovetail_rounding = 1;
 
+louver_thickness = 2;
+louver_rod_d = 4;
+louver_overlap = 10;
+
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
@@ -34,11 +40,9 @@ module left_blank() {
 
 module fan() {
 
-    fan_padding = 20;
-
     diff() cuboid([fan_width+fan_padding*2, depth, height]) {
-        attach(LEFT) dovetail("male", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
-        tag("remove") attach(RIGHT) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
+        //attach(LEFT) dovetail("male", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
+        //tag("remove") attach(RIGHT) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
         
         
@@ -50,9 +54,26 @@ module fan() {
                     xcyl(d=screw_diam, h=depth, spin=90);
             }
         }
+        
     }
 
 }
 
+module louver() {
+    cuboid([fan_width+louver_overlap*2, louver_thickness, fan_width/4]) {
+        attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
+    }
+}
+
 //left (blank_width/2 + fan_width ) left_blank();
 fan();
+//back(depth/2) louver();
+
+// louvers
+// wiring holes
+// wiring box
+// right width for the window
+// right blank
+// finger guards
+// round corners on fan cutout
+
