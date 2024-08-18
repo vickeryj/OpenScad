@@ -29,7 +29,10 @@ dovetail_rounding = 1;
 louver_thickness = 2;
 louver_rod_d = 4;
 louver_overlap = 10;
-
+louver_socket_h = 4;
+louver_socket_slop = .3;
+louver_flap_slop = .5;
+louver_socket_wall = 2;
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
@@ -59,15 +62,45 @@ module fan() {
 
 }
 
+louver_height = fan_width/4+1;
+
 module louver() {
-    cuboid([fan_width+louver_overlap*2, louver_thickness, fan_width/4]) {
-        attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
+    $fn=64;
+    difference() {
+        cuboid([fan_width+louver_overlap*2, louver_thickness, louver_height]) {
+            back(louver_thickness/2) attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
+        }
+        down(louver_height/2) fwd(louver_thickness/2) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
     }
 }
 
+module louver_bracket() {
+    $fn=64;
+    diff() cuboid([fan_width+fan_padding*2, 3, height]) {
+    
+         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
+         
+         for(i = [0,1,2, 3]) {
+            for (j = [-1,1]) {
+                up(fan_width/2-(louver_height+louver_flap_slop)*i) {
+                    tag("keep") left(j*(fan_width/2+fan_padding-louver_socket_h/2)) back(louver_rod_d/2) attach(BACK) tube(h=louver_socket_h, id=louver_rod_d + louver_socket_slop, wall = louver_socket_wall, orient=LEFT);
+                    tag("keep") down(louver_height/2) back(3/2+louver_thickness/2) louver();
+                }
+            }
+        }
+    }
+    
+}
+
+
 //left (blank_width/2 + fan_width ) left_blank();
-fan();
-//back(depth/2) louver();
+//fan();
+//back(3/2+louver_thickness/2) louver();
+//back(depth/2+louver_thickness/2) louver();
+
+//back(depth/2) down(louver_height+.2) louver();
+
+louver_bracket();
 
 // louvers
 // wiring holes
