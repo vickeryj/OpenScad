@@ -24,7 +24,7 @@ module slot() {
 }
 
 module base() {
-    cuboid([slot_d+wall_thickness*2, base_w, wall_thickness], rounding = 1);
+    cuboid([slot_d+wall_thickness*2+2, base_w, wall_thickness], rounding = 1);
 
 }
 
