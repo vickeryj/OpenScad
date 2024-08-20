@@ -29,10 +29,11 @@ dovetail_rounding = 1;
 louver_thickness = 2;
 louver_rod_d = 4;
 louver_overlap = 10;
-louver_socket_h = 4;
-louver_socket_slop = .3;
-louver_flap_slop = .5;
+louver_socket_h = 5;
+louver_socket_slop = .6;
+louver_flap_slop = 1;
 louver_socket_wall = 2;
+louver_socket_cap_w = 1;
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
@@ -66,31 +67,36 @@ louver_height = fan_width/4+1;
 
 module louver() {
     $fn=64;
-    difference() {
-        cuboid([fan_width+louver_overlap*2, louver_thickness, louver_height]) {
-            back(louver_thickness/2) attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
-        }
-        down(louver_height/2) fwd(louver_thickness/2) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2);
+    cuboid([fan_width+louver_overlap*2, louver_thickness, louver_height-louver_rod_d/2]) {
+        back(louver_thickness/2) attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2-louver_socket_cap_w*4);
     }
 }
 
+louver_grill_thickness = 3;
+
 module louver_bracket() {
     $fn=64;
-    diff() cuboid([fan_width+fan_padding*2, 3, height]) {
+    diff() cuboid([fan_width+fan_padding*2, louver_grill_thickness, height]) {
     
          tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
          
-         for(i = [0,1,2, 3]) {
+         for(i = [0,1,2,3]) {
             for (j = [-1,1]) {
                 up(fan_width/2-(louver_height+louver_flap_slop)*i) {
-                    tag("keep") left(j*(fan_width/2+fan_padding-louver_socket_h/2)) back(louver_rod_d/2) attach(BACK) tube(h=louver_socket_h, id=louver_rod_d + louver_socket_slop, wall = louver_socket_wall, orient=LEFT);
-                    tag("keep") down(louver_height/2) back(3/2+louver_thickness/2) louver();
+                    tag("keep") left(j*(fan_width/2+fan_padding-louver_socket_h/2)) back(louver_rod_d/2) attach(BACK) {
+                        tube(h=louver_socket_h, id=louver_rod_d + louver_socket_slop, wall = louver_socket_wall, orient=LEFT);
+                        right(((louver_socket_h/2)-(louver_socket_cap_w/2))*j) cyl(h=louver_socket_cap_w, d=louver_rod_d + louver_socket_slop+louver_socket_wall*2, orient=LEFT);
+                    }
+                    //xrot(0) tag("keep") down(louver_height/2) back(3/2+louver_thickness/2) louver();
                 }
             }
+            tag("keep") up(fan_width/2) down(i*(louver_height+louver_flap_slop)) cuboid([fan_width, louver_grill_thickness, louver_socket_h+louver_socket_wall*2]);
         }
     }
     
 }
+
+left (200) louver();
 
 
 //left (blank_width/2 + fan_width ) left_blank();
