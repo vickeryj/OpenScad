@@ -96,19 +96,21 @@ module louver_bracket() {
     
 }
 
-left (200) louver();
+//left (200) louver();
 
 
 //left (blank_width/2 + fan_width ) left_blank();
-//fan();
+fan();
 //back(3/2+louver_thickness/2) louver();
 //back(depth/2+louver_thickness/2) louver();
 
 //back(depth/2) down(louver_height+.2) louver();
 
-louver_bracket();
+back(depth/2-louver_grill_thickness/2) louver_bracket();
 
-// louvers
+// - louvers
+// - louvers on fan box
+// rotate dovetails for printing
 // wiring holes
 // wiring box
 // right width for the window
