@@ -37,7 +37,7 @@ louver_socket_cap_w = 1;
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
-        tag("remove") attach(RIGHT) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
         tag("remove") position(BOTTOM+LEFT) down(.01) left(.01) cuboid([lock_notch, depth+.02, lock_height], anchor=BOTTOM+LEFT);
     }
 }
@@ -45,8 +45,8 @@ module left_blank() {
 module fan() {
 
     diff() cuboid([fan_width+fan_padding*2, depth, height]) {
-        //attach(LEFT) dovetail("male", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
-        //tag("remove") attach(RIGHT) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding);
+        attach(LEFT) ycopies(height/2,2) dovetail("male", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
         
         
@@ -99,18 +99,20 @@ module louver_bracket() {
 //left (200) louver();
 
 
-//left (blank_width/2 + fan_width ) left_blank();
+left (blank_width/2 + fan_width ) left_blank();
 fan();
+//back(depth/2-louver_grill_thickness/2) louver_bracket();
+
 //back(3/2+louver_thickness/2) louver();
 //back(depth/2+louver_thickness/2) louver();
 
 //back(depth/2) down(louver_height+.2) louver();
 
-back(depth/2-louver_grill_thickness/2) louver_bracket();
 
 // - louvers
 // - louvers on fan box
 // rotate dovetails for printing
+// move fan mount to posts for faster printing
 // wiring holes
 // wiring box
 // right width for the window
