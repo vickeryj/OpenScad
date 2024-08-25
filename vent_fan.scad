@@ -14,12 +14,12 @@ fan_width = 139;
 fan_depth = 25;
 fan_diam = 135;
 fan_padding = 20;
-
+fan_mount_d = 20;
 
 screw_diam = 4.5;
 screw_inset = 7;
 
-fan_mount_thickness = 3.5;
+fan_mount_thickness = 6;
 
 dovetail_width = depth/5*2;
 dovetail_depth = dovetail_width/2;
@@ -35,6 +35,7 @@ louver_flap_slop = 1;
 louver_socket_wall = 2;
 louver_socket_cap_w = 1;
 
+
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
         tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
@@ -49,16 +50,17 @@ module fan() {
         tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
         
-        
-        tag("keep") difference() {
-            position(FRONT) back(fan_depth) cuboid([fan_width, fan_mount_thickness, fan_width], anchor=FRONT);
-            xcyl(d=fan_diam, h=depth, spin=90);
+            
+        tag("keep") {
             for(i=[[1,1],[1,-1], [-1, 1], [-1, -1]]) {
-                down(i[0]*fan_width/2-i[0]*screw_inset) left(i[1]*fan_width/2-i[1]*screw_inset)
-                    xcyl(d=screw_diam, h=depth, spin=90);
+                down(i[0]*fan_width/2-i[0]*screw_inset) left(i[1]*fan_width/2-i[1]*screw_inset) fwd(depth/2 - fan_mount_thickness/2-fan_depth) {
+                    difference() {
+                        xcyl(d=fan_mount_d, h=fan_mount_thickness, spin=90);
+                        xcyl(d=screw_diam, h=fan_mount_thickness+.02, spin=90);
+                    }
+                }
             }
         }
-        
     }
 
 }
@@ -101,7 +103,7 @@ module louver_bracket() {
 
 left (blank_width/2 + fan_width ) left_blank();
 fan();
-//back(depth/2-louver_grill_thickness/2) louver_bracket();
+back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
 
 //back(3/2+louver_thickness/2) louver();
 //back(depth/2+louver_thickness/2) louver();
@@ -111,7 +113,7 @@ fan();
 
 // - louvers
 // - louvers on fan box
-// rotate dovetails for printing
+// - rotate dovetails for printing
 // move fan mount to posts for faster printing
 // wiring holes
 // wiring box
