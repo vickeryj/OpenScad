@@ -26,7 +26,7 @@ dovetail_depth = dovetail_width/2;
 dovetail_taper = -.6;
 dovetail_rounding = 1;
 
-louver_thickness = 2;
+louver_thickness = 1;
 louver_rod_d = 4;
 louver_overlap = 10;
 louver_socket_h = 5;
@@ -70,7 +70,7 @@ louver_height = fan_width/4+1;
 module louver() {
     $fn=64;
     cuboid([fan_width+louver_overlap*2, louver_thickness, louver_height-louver_rod_d/2]) {
-        back(louver_thickness/2) attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2-louver_socket_cap_w*4);
+        back(louver_rod_d/2-louver_thickness/2) attach(TOP) xcyl(d=louver_rod_d, h = fan_width+fan_padding*2-louver_socket_cap_w*4);
     }
 }
 
@@ -98,12 +98,12 @@ module louver_bracket() {
     
 }
 
-//left (200) louver();
+left (200) louver();
 
 
-left (blank_width/2 + fan_width ) left_blank();
-fan();
-back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+//left (blank_width/2 + fan_width ) left_blank();
+//fan();
+//back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
 
 //back(3/2+louver_thickness/2) louver();
 //back(depth/2+louver_thickness/2) louver();
