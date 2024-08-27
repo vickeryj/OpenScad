@@ -10,8 +10,8 @@ lock_height = 9;
 depth = 70;
 height = 180;
 
-fan_width = 139;
-fan_depth = 25;
+fan_width = 140;
+fan_depth = 26;
 fan_diam = 135;
 fan_padding = 20;
 fan_mount_d = 20;
@@ -19,7 +19,7 @@ fan_mount_d = 20;
 screw_diam = 4.5;
 screw_inset = 7;
 
-fan_mount_thickness = 6;
+fan_mount_thickness = 4;
 
 dovetail_width = depth/5*2;
 dovetail_depth = dovetail_width/2;
@@ -38,7 +38,7 @@ louver_socket_cap_w = 1;
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
-        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
         tag("remove") position(BOTTOM+LEFT) down(.01) left(.01) cuboid([lock_notch, depth+.02, lock_height], anchor=BOTTOM+LEFT);
     }
 }
@@ -46,8 +46,8 @@ module left_blank() {
 module fan() {
 
     diff() cuboid([fan_width+fan_padding*2, depth, height]) {
-        attach(LEFT) ycopies(height/2,2) dovetail("male", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
-        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=90);
+        attach(LEFT) ycopies(height/2,2) dovetail("male", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
         
             
@@ -114,7 +114,9 @@ back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
 // - louvers
 // - louvers on fan box
 // - rotate dovetails for printing
-// move fan mount to posts for faster printing
+// rotate dovetails so they fit together with the grill in place
+// make fan cutout larger so it isn't such a tight fit
+// - move fan mount to posts for faster printing
 // wiring holes
 // wiring box
 // right width for the window
