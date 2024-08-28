@@ -35,6 +35,8 @@ louver_flap_slop = 1;
 louver_socket_wall = 2;
 louver_socket_cap_w = 1;
 
+wire_cut_d = 15;
+
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
@@ -59,6 +61,14 @@ module fan() {
                         xcyl(d=screw_diam, h=fan_mount_thickness+.02, spin=90);
                     }
                 }
+            }
+        }
+        
+        tag("remove") {
+            wire_cut_h = (height-fan_width)*2;
+            down(height/2-wire_cut_h/2+wire_cut_d) fwd(depth/2-fan_depth/2-fan_mount_thickness) {
+                right(fan_width/2) yrot(125) cyl(h=wire_cut_h, d=wire_cut_d);
+                left(fan_width/2) yrot(-125) cyl(h=wire_cut_h, d=wire_cut_d);
             }
         }
     }
@@ -98,12 +108,27 @@ module louver_bracket() {
     
 }
 
-left (200) louver();
-
+//left (200) louver();
 
 //left (blank_width/2 + fan_width ) left_blank();
-//fan();
-//back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+fan();
+back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+
+
+module dovetail_test() {
+    module pieces() {
+        left (blank_width/2 + fan_width ) left_blank();
+        fan();
+        back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+    }
+    intersection() {
+        pieces();
+        left(120) #cuboid([100,20,140]);
+    }
+}
+
+//dovetail_test();
+
 
 //back(3/2+louver_thickness/2) louver();
 //back(depth/2+louver_thickness/2) louver();
