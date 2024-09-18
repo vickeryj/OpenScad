@@ -40,7 +40,7 @@ wire_cut_d = 15;
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
-        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
         tag("remove") position(BOTTOM+LEFT) down(.01) left(.01) cuboid([lock_notch, depth+.02, lock_height], anchor=BOTTOM+LEFT);
     }
 }
@@ -49,7 +49,7 @@ module fan() {
 
     diff() cuboid([fan_width+fan_padding*2, depth, height]) {
         attach(LEFT) ycopies(height/2,2) dovetail("male", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
-        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=height, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
+        tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
         tag("remove") fwd(.01) cuboid([fan_width, depth+.03, fan_width]);
         
             
@@ -111,23 +111,26 @@ module louver_bracket() {
 //left (200) louver();
 
 //left (blank_width/2 + fan_width ) left_blank();
-fan();
-back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+//fan();
+//back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
 
+module pieces() {
+    left (blank_width/2 + fan_width ) left_blank();
+    fan();
+    back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+}
+
+//pieces();
 
 module dovetail_test() {
-    module pieces() {
-        left (blank_width/2 + fan_width ) left_blank();
-        fan();
-        back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
-    }
+
     intersection() {
         pieces();
-        left(120) #cuboid([100,20,140]);
+        left(120) cuboid([100,100,140]);
     }
 }
 
-//dovetail_test();
+dovetail_test();
 
 
 //back(3/2+louver_thickness/2) louver();
