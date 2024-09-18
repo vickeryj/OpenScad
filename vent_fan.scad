@@ -3,7 +3,7 @@ include <BOSL2/joiners.scad>
 
 $slop = .11;
 
-blank_width = 120;
+blank_width = 90;
 lock_notch = 86;
 lock_height = 9;
 
