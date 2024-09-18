@@ -24,7 +24,7 @@ fan_mount_thickness = 4;
 dovetail_width = depth/5*2;
 dovetail_depth = dovetail_width/2;
 dovetail_taper = -.6;
-dovetail_rounding = 1;
+dovetail_rounding = .1;
 
 louver_thickness = 1;
 louver_rod_d = 4;
@@ -126,7 +126,7 @@ module dovetail_test() {
 
     intersection() {
         pieces();
-        left(120) cuboid([100,100,140]);
+        #left(120) back(35) cuboid([100,15,140]);
     }
 }
 
