@@ -120,7 +120,7 @@ module pieces() {
     back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
 }
 
-//pieces();
+pieces();
 
 module dovetail_test() {
 
@@ -130,7 +130,7 @@ module dovetail_test() {
     }
 }
 
-dovetail_test();
+//dovetail_test();
 
 
 //back(3/2+louver_thickness/2) louver();
@@ -142,13 +142,12 @@ dovetail_test();
 // - louvers
 // - louvers on fan box
 // - rotate dovetails for printing
-// rotate dovetails so they fit together with the grill in place
-// make fan cutout larger so it isn't such a tight fit
+// - rotate dovetails so they fit together with the grill in place
+// - make fan cutout larger so it isn't such a tight fit
 // - move fan mount to posts for faster printing
-// wiring holes
+// - wiring holes
 // wiring box
 // right width for the window
-// right blank
 // finger guards
 // round corners on fan cutout
 
