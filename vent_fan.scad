@@ -3,9 +3,13 @@ include <BOSL2/joiners.scad>
 
 $slop = .11;
 
-blank_width = 90;
+blank_width = 85;
 lock_notch = 86;
 lock_height = 9;
+
+wire_box_width = 85;
+wire_box_walls = 30;
+
 
 depth = 70;
 height = 180;
@@ -42,6 +46,20 @@ module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
         tag("remove") attach(RIGHT) ycopies(height/2,2) dovetail("female", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
         tag("remove") position(BOTTOM+LEFT) down(.01) left(.01) cuboid([lock_notch, depth+.02, lock_height], anchor=BOTTOM+LEFT);
+    }
+}
+
+module wire_block() {
+    diff() cuboid([wire_box_width, depth, height]) {
+        attach(LEFT) ycopies(height/2,2) dovetail("male", slide=depth, width=dovetail_width, height=dovetail_depth, taper=dovetail_taper, radius=dovetail_rounding, spin=270);
+        tag("remove") position(BOTTOM+LEFT) down(.01) left(.01) cuboid([lock_notch, depth+.02, lock_height], anchor=BOTTOM+LEFT);
+        tag("remove") position(FRONT) fwd(.01) cuboid([wire_box_width-wire_box_walls, depth-wire_box_walls, height-wire_box_walls-lock_height], anchor=FRONT);
+        tag("remove") {
+            wire_cut_h = wire_box_width;
+            down(height/2-wire_cut_d) fwd(depth/2-fan_depth/2-fan_mount_thickness) {
+                left(wire_box_width/2) yrot(-125) cyl(h=wire_cut_h, d=wire_cut_d);
+            }
+        }
     }
 }
 
@@ -108,7 +126,7 @@ module louver_bracket() {
     
 }
 
-//left (200) louver();
+//right (200) louver();
 
 //left (blank_width/2 + fan_width ) left_blank();
 //fan();
@@ -118,6 +136,9 @@ module pieces() {
     left (blank_width/2 + fan_width ) left_blank();
     fan();
     back(depth/2+louver_grill_thickness/2-.01) louver_bracket();
+    right(200) wire_block();
+//    right (400) louver();
+
 }
 
 pieces();
