@@ -1,5 +1,6 @@
 include <BOSL2/std.scad>
 include <BOSL2/joiners.scad>
+include <gaggiuino_common.scad>
 
 $slop = .11;
 
@@ -10,6 +11,8 @@ lock_height = 9;
 wire_box_width = 85;
 wire_box_walls = 30;
 
+wire_box_cover_depth = 10;
+wall_thickness = 2;
 
 depth = 70;
 height = 180;
@@ -41,6 +44,8 @@ louver_socket_cap_w = 1;
 
 wire_cut_d = 15;
 
+board_centers = [46.5, 66];
+relay_centers = [44.5, 22.5];
 
 module left_blank() {
     diff() cuboid([blank_width, depth, height]) {
@@ -62,6 +67,26 @@ module wire_block() {
         }
     }
 }
+
+module wire_block_cover() {
+
+    inset_height = wire_box_width-wire_box_walls-2*$slop;
+    inset_width = height-wire_box_walls-lock_height-2*$slop;
+
+    diff() cuboid([inset_height, wire_box_cover_depth, inset_width]) 
+    {
+        position(FRONT) cuboid([wire_box_width, wall_thickness, height], anchor=BACK);
+        right(.01) down(.01) back(.01) tag("remove") position(BACK+RIGHT+BOTTOM) cuboid([wire_box_width/5, wire_box_cover_depth, height/7], anchor=BACK+RIGHT+BOTTOM);
+        
+    }
+    
+    back(wire_box_cover_depth/2+post_h/2) {
+        up(inset_height/2+relay_centers[1]/2) left(relay_centers[0]-relay_centers[0]/2) xrot(90) posts(relay_centers);
+         down(inset_height/2+10) left(board_centers[0]-board_centers[0]/2)  #xrot(90) posts(board_centers, screw_hole = "M2");
+    }
+}
+
+wire_block_cover();
 
 module fan() {
 
@@ -141,7 +166,7 @@ module pieces() {
 
 }
 
-pieces();
+//pieces();
 
 module dovetail_test() {
 
@@ -167,8 +192,9 @@ module dovetail_test() {
 // - make fan cutout larger so it isn't such a tight fit
 // - move fan mount to posts for faster printing
 // - wiring holes
-// wiring box
-// right width for the window
+// - wiring box
+// - right width for the window
 // finger guards
 // round corners on fan cutout
+// wire box cover with mounts
 
