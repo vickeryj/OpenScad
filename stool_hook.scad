@@ -69,8 +69,10 @@ module hook() {
 }
 
 module cover() {
-    cuboid([shelf_space/3*2, cover_width, hook_width], rounding=1.2) {
+    cuboid([shelf_space/3*2, cover_width, hook_width], rounding=1.2,
+    edges=[TOP+BACK, LEFT+BACK, BOTTOM+BACK] ) {
     }
 }
-cover();
+
+fwd(hook_d+wall_width+cover_width/2) up(hook_width/2) left(shelf_space/3*2) cover();
 hook();
