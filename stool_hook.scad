@@ -23,7 +23,9 @@ dovetail_back = 6;
 
 $slop = 0.11;
 
-$fn=64;
+$fn=12; working
+//$fn=64; print
+
 
 module hook() {
 
@@ -70,9 +72,9 @@ module hook() {
     difference() {
         hook();
         for (i = [hook_width/4, hook_width/4*3]) {
-            fwd(wand_r*2+wall_width+cover_width-0.01) up(i) left(shelf_space/4*2) xrot(270) #screw_hole("#6,1/2",head="flat", anchor=TOP);
+            fwd(wand_r*2+wall_width+cover_width-0.01) up(i) left(shelf_space/4*2) xrot(270) #screw_hole("#6,1/2",head="flat", counterbore=1, anchor=TOP);
         }
-        fwd(wand_r*2+wall_width+cover_width-0.01) up(hook_width/2) left(shelf_space/4*3) xrot(270) #screw_hole("#6,1/2",head="flat", anchor=TOP);
+        fwd(wand_r*2+wall_width+cover_width-0.01) up(hook_width/2) left(shelf_space/4*3) xrot(270) #screw_hole("#6,1/2",head="flat", counterbore=1, anchor=TOP);
     }
     
 
@@ -86,5 +88,5 @@ module cover() {
     }
 }
 
-fwd(hook_d+wall_width+cover_width/2) up(hook_width/2) left(shelf_space/3*2) back(10) cover();
+//fwd(hook_d+wall_width+cover_width/2) up(hook_width/2) left(shelf_space/3*2) back(10) cover();
 hook();
