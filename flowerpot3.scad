@@ -1,10 +1,10 @@
 include <BOSL2/std.scad>
 
-$fn = 120;
+$fn = 32;
 
-height = 154;
-base_d =133;
-top_d =181.5;
+height = 90;
+base_d = 80;
+top_d =105;
 wall_thickness = 2.5;
 hole_d = 6;
 
@@ -21,9 +21,9 @@ module pot() {
     }
 }
 
-saucer_gap = 2;
+saucer_gap = 1;
 saucer_height = 12;
-saucer_slant = 12;
+saucer_slant = 10;
 drain_gap = 5;
 drain_height = 4;
 
@@ -40,7 +40,7 @@ module saucer() {
     }
 }
 
-//up((height/2) - (saucer_height/2) + drain_height + wall_thickness) pot();
-//up(height/2) pot();
-//up(saucer_height/2) left(top_d) saucer();
-saucer();
+//up((height/2) - (saucer_height/2) + drain_height + wall_thickness+5) pot();
+up(height/2) pot();
+left(top_d) saucer();
+//saucer();
