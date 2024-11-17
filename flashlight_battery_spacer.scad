@@ -2,7 +2,7 @@ include <BOSL2/std.scad>
 
 height = 31;
 outer = 22.9;
-inner = 18.3;
+inner = 18.5;
 
 $fn = 120;
 
