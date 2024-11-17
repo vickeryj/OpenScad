@@ -1,8 +1,8 @@
 include <BOSL2/std.scad>
 
-height = 25;
-outer = 22.7;
-inner = 18.7;
+height = 31;
+outer = 22.9;
+inner = 18.3;
 
 $fn = 120;
 
