@@ -31,7 +31,7 @@ laptop_depth_1 = 250;
 laptop_height_1 = 17;
 
 shelf_height_1 = 30;
-shelf_depth = 45;
+shelf_depth = 50;
 
 wall_width = 4;
 side_gap = 1;
@@ -53,11 +53,17 @@ module shelf_1() {
 }
 
 
-shelf_length = 150;
+shelf_length = 155;
 
+// MBA
+//laptop_width_2 = 330;
+//laptop_depth_2 = 215;
+//laptop_height_2= 11;
+
+//14" MBP
 laptop_width_2 = 330;
-laptop_depth_2 = 215;
-laptop_height_2= 11;
+laptop_depth_2 = 220;
+laptop_height_2= 15;
 
 shelf_2_width = laptop_width_2+side_gap*2+wall_width*2;
 
@@ -73,6 +79,28 @@ module mba() {
     translate([-14.5-21/2+laptop_width_2, 14.5+21/2, -2.3]) mba_foot();
     translate([-14.5-21/2+laptop_width_2, laptop_depth_2-14.5-21/2, -2.3]) mba_foot();
 }
+    
+
+    
+module mbp() {
+
+    foot_height = 2.3;
+    foot_d = 22;
+
+    module mbp_foot() {
+        cylinder(h = foot_height, d = foot_d, center = false);
+    }
+    
+    foot_inset = 18.5+21/2;
+
+    cube([laptop_width_2, laptop_depth_2, laptop_height_2]);
+    translate([foot_inset, foot_inset, -foot_height]) mbp_foot();
+    translate([foot_inset, laptop_depth_2-foot_inset, -foot_height]) mbp_foot();
+    //color("red", 1) translate([laptop_width_2+.01, 14.8, 4]) cube([.1, 46.7, 4]);
+    translate([-foot_inset+laptop_width_2, foot_inset, -foot_height]) mbp_foot();
+    translate([-foot_inset+laptop_width_2, laptop_depth_2-foot_inset, -foot_height]) mbp_foot();
+}
+
 
 module shelf_2() {
     shelf_gap = laptop_height_2+top_gap;
@@ -165,8 +193,11 @@ right_shelves();
 
 difference() {
     shelves();
-    translate([wall_width+side_gap, -1, wall_width]) mba();
+    translate([wall_width+side_gap, -1, wall_width]) mbp();
 }
+//mbp();
+
+
 //ddjf675e1translate([wall_width+side_gap, -1, wall_width]) color("red", .1) mba();
 //translate([60, 0, 0]) guide_1(laptop_height_2+top_gap);
 //translate([60, -60, 0]) guide_2_1(laptop_height_2+top_gap);
