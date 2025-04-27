@@ -6,7 +6,7 @@ include <BOSL2/rounding.scad>
 
 module guide(floor_gap, door_gap, door_thickness) {
 
-    post_thickness = 10;
+    post_thickness = 7;
     post_height = 30;
     door_depth = door_thickness;
     angled_post_hypotenuse = post_height/sin(80);
