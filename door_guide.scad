@@ -69,6 +69,10 @@ module guide(floor_gap, door_gap, door_thickness) {
 }
 
 //deana_closet floor_gap, door_gap, door_width
-guide(25, 10, 40);
+//maybe too much for the door width and door_gap, everythign looks good
+//guide(25, 10, 40);
+
+//front closet, try tighter 9, 9, 38
+ guide(9, 9, 38);
 
 //guide();
