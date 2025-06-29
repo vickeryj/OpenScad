@@ -198,3 +198,10 @@ module dovetail_test() {
 // round corners on fan cutout
 // wire box cover with mounts
 
+//new things afrer more recent assembly
+// wire channel all the way around the bottom
+// wire hole straight through to the right most piece
+// re-do circuit board so power wire and other wires don't go off to the side
+// re-do power cable hole from wire block
+// re-do wire block cover and circuit board mounting
+
