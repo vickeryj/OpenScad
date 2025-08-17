@@ -2,8 +2,8 @@ include <BOSL2/std.scad>
 include <BOSL2/rounding.scad>
 //
 //
-jar_d = 50;  // add indent gap
-jar_h = 70;  // add finger gap
+jar_d = 50 + 2;  // with indent gap
+jar_h = 70 + 25;  // with finger gap
 spacing = 20;
 shelf_h = 10;
 indent_h = 6;
@@ -12,9 +12,9 @@ shelf_d = jar_d + spacing;
 post_size = 6;
 post_round = 1;
 $slop = .11;
-//
+post_arc = 2;
 //$fn=64;
-//
+
 module shelf(cutout = false, legs = false) {
     
     module flat() {
@@ -27,15 +27,16 @@ module shelf(cutout = false, legs = false) {
     }
     
     
+    post_arc = 2;
+    
     module arc_post() {
         height = jar_h;
-        depth = jar_d;
-        r = 1;
+        depth = shelf_d*4/5;
         hook_path = turtle([
             "move", depth,
-            "arcright", r, 180,
+            "arcright", post_arc, 180,
             "arcleft", jar_h/2-1, 180,
-            "arcright", r, 180,
+            "arcright", post_arc, 180,
             "move", depth,
             "right", 90,
             "move", height
@@ -62,7 +63,8 @@ module shelf(cutout = false, legs = false) {
     
     if (legs) {
         for(i = [post_w_spacing : post_w_spacing : shelf_w-post_w_spacing]) {
-            back(shelf_d/2-post_size*1.5)
+            up(jar_h+shelf_h/2+post_arc*2)
+            fwd(shelf_d/2)
             left(shelf_w/2-post_size/2)
             right(i)
                 xrot(90) yrot(90) arc_post();
@@ -79,22 +81,18 @@ module shelf(cutout = false, legs = false) {
             indent();
         }
         if (cutout) {
-            for(i = [0 : post_w_spacing : shelf_w]) {
-                back(shelf_d/2-post_size*1.5)
-                left(shelf_w/2-post_size/2)
+            for(i = [post_w_spacing : post_w_spacing : shelf_w-post_w_spacing]) {
+                //up(jar_h+shelf_h/2+post_arc*2)
+                fwd(.01)
+                down(shelf_h/2 - post_arc)
+                fwd(shelf_d/2)
+                left(shelf_w/2-post_size/2+.6)
                 right(i)
-                    post_hole();
-            }
-            
-            for(i = [post_w_spacing : post_w_spacing: shelf_w-post_w_spacing]) {
-                left(shelf_w/2-post_size/2)
-                fwd(shelf_d/3)
-                right(i)
-                    post_hole();
+                    xrot(90) yrot(90) zscale(1.202) arc_post();
             }
         }
     }
-    }
+}
     
 
 
@@ -102,8 +100,8 @@ module shelf(cutout = false, legs = false) {
 
 
 shelf(legs=true);
-//up(jar_h) shelf(cutout=true, legs=true);
-//up(jar_h*2) shelf(cutout=true);
+//shelf(legs=true, cutout=true);
+fwd(120) shelf(cutout=true);
 
 
 
