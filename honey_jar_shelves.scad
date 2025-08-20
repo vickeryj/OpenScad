@@ -99,9 +99,9 @@ module shelf(cutout = false, legs = false) {
 
 
 
-shelf(legs=true);
-//shelf(legs=true, cutout=true);
-fwd(120) shelf(cutout=true);
+//shelf(legs=true);
+shelf(legs=true, cutout=true);
+//fwd(120) shelf(cutout=true);
 
 
 
