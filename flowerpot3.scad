@@ -2,9 +2,9 @@ include <BOSL2/std.scad>
 
 $fn = 32;
 
-height = 90;
-base_d = 80;
-top_d =105;
+height = 120;
+base_d = 115;
+top_d = 105;
 wall_thickness = 2.5;
 hole_d = 6;
 
@@ -29,7 +29,7 @@ drain_height = 4;
 
 module saucer() {
     up(saucer_height/2) difference() {
-        cyl(d1=base_d+saucer_gap, d2=base_d+saucer_slant, h=saucer_height, rounding1=2,
+        cyl(d1=base_d+saucer_gap, d2=base_d+saucer_slant, h=saucer_height, rounding1=0,
             texture="trunc_ribs", tex_size=[10,1], tex_taper=40);
         up(wall_thickness) cyl(d1=base_d+saucer_gap-wall_thickness, d2=base_d+saucer_slant-wall_thickness, h=saucer_height, rounding1=2);
     }
@@ -42,5 +42,5 @@ module saucer() {
 
 //up((height/2) - (saucer_height/2) + drain_height + wall_thickness+5) pot();
 up(height/2) pot();
-left(top_d) saucer();
+left(base_d+20) saucer();
 //saucer();
