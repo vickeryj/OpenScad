@@ -49,7 +49,7 @@ module all_together() {
         translate([23.5, 42, -.01]) slot();
         translate([23.5+4.5+88.5, 42, -.01]) slot();
         
-        translate([62, 166-53.5, height-4]) cube([48,49,10]);
+        translate([39.7, 115, -1]) cube([68,44,8]); //camera void
         
         translate([146/2, 166/2, .4]) rotate([90, 90, 0]) magsafe_void();
         translate([71, 46, -.01]) cube([4, 10, 4]);
@@ -101,7 +101,7 @@ module arc(r1, r2, a1, a2) {
 
 // All dimensions are in mm
 MAGSAFE_WIDTH = 56.1; // how width the magsafe puck is
-MAGSAFE_DEPTH = 5; // how deep the ring around the magsafe is (towards the phone)
+MAGSAFE_DEPTH = 6; // how deep the ring around the magsafe is (towards the phone)
 CORD_THICKNESS = 5; // how thick the magsafe cord is
 RING_THICKNESS = 7; // how thick the ring around the magsafe is
 EPSILON = 0.01; 
