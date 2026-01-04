@@ -118,7 +118,7 @@ module base() {
 
 module top() {
 
-    base_d = 100;
+//    base_d = 100;
     top_d = 150;
     height = 20;
 
@@ -126,16 +126,19 @@ module top() {
     post_back = 9.5;
     post_fwd = 22;
     post_over = 40;
-    post_height = height;
+    post_height = height+5;
 
     difference() {
 
         xscale(oval_scale) cyl(d1=base_d, d2=top_d, h=height, anchor=BOTTOM, rounding1=2);
-        up(wall_w) xscale(oval_scale) cyl(d1=base_d-wall_w, d2=top_d-wall_w, h = height, anchor=BOTTOM, rounding1=2, rounding2=-2);
+        #up(wall_w/2) xscale(oval_scale) cyl(d1=base_d-wall_w, d2=top_d-wall_w, h = height, anchor=BOTTOM, rounding1=2, rounding2=-2);
 
     }
 
-    up(wall_w-.01) posts(post_height=post_height, foot_rounding=0);
+    difference() {
+        up(wall_w/2-.01) posts(post_height=post_height, foot_rounding=0);
+        up(wall_w) #post_holes(post_height = post_height);
+    }
 
 }
 
@@ -199,7 +202,7 @@ module m3_insert() {
 }
 
 //m3_insert();
-//right(200) top();
+right(200) top();
 //up(10) yrot(180) right(160) base();
 
 //middle(post_d = 9, inserts = true);
@@ -207,5 +210,5 @@ module m3_insert() {
 //middle(solid=true);
 //middle(solid=true);
 //middle();
-yrot(180) base();
+//yrot(180) base();
 //right(200) middle(post_d=8, inserts=true);
