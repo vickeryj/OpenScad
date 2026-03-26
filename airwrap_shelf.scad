@@ -3,14 +3,15 @@ include <BOSL2/rounding.scad>
 include <BOSL2/screws.scad>
 
 wand_r = 25;
-width = 220;
+//width = 220;
+width = 170;
 wall_width = 4;
 shelf_space = 100;
 shelf_depth = 80;
 attach_d = 31.8;
 attach_h = 10;
 
-$fn=12;
+$fn=64;
 
 module solid_shelf() {
     shelf_path = turtle([
@@ -32,6 +33,45 @@ module solid_shelf() {
         top=os_circle(r=1.2)
         );
 }
+
+setoff = 10;
+wall_space = 40;
+
+module solid_hook() {
+    hook_path = turtle([
+        "arcright", wand_r+wall_width, 180,
+        "arcleft", wall_width/2, 90,
+        "move", setoff,
+        "arcright", wall_width/2, 90,
+        "move", wall_space,
+        "arcright", wall_width/2, 180,
+        "move", wall_space-wall_width,
+        "arcleft", wall_width/2, 90,
+        "move", setoff,
+        "arcright", wall_width/2, 90,
+        "move", wall_width,
+        "arcleft", wand_r, 180,
+        "arcright", wall_width/2, 179
+
+    ]);
+
+    //stroke(hook_path);
+    offset_sweep(hook_path, 
+        height = width,
+        bottom=os_circle(r=1.2),
+        top=os_circle(r=1.2)
+        );
+}
+difference() {
+    solid_hook();
+    spec = screw_info("#8,1/2",head="round");
+    newspec = struct_set(spec,["head_size",11]);
+    left(wall_space/2+wall_width*1.5) fwd(wand_r*2+wall_width+2.5+setoff) up(width/4) xrot(90) yrot(180) screw_hole(newspec, anchor=TOP);
+    left(wall_space/2+wall_width*1.5) fwd(wand_r*2+wall_width+2.5+setoff) up(width/4*3) xrot(90) yrot(180) screw_hole(newspec, anchor=TOP);
+
+}
+right(3.5) fwd(wand_r*2+setoff+3.5) up(width/2) xrot(90) yrot(229) prismoid(size1=[setoff*2,width], size2=[0,width], h=setoff);
+
 
 module peg() {
     cyl(d = attach_d, h = attach_h);
@@ -85,7 +125,7 @@ module wire_hook() {
     }
 }
 
-wire_hook();
+//wire_hook();
 
 module test_hook() {
     shelf_path = turtle([
